@@ -355,6 +355,28 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
   padding: 0;
   gap: 12px;
 }
+
+.foot-video {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  color: white;
+  font-size: 14px;
+}
+
+.foot-video video {
+  width: 27%;
+  height: 25%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .foot-video {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 <body>
@@ -718,7 +740,15 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
     <div class="foot-col"><h5>Services</h5><a href="#reserver">Remise à neuf</a><a href="#reserver">Polissage</a><a href="#reserver">Enduit céramique</a><a href="#reserver">PPF & teinte</a></div>
     <div class="foot-col"><h5>Coordonnées</h5><p>255 rue Singapour, Local 17<br>St-Augustin-de-Desmaures, QC</p><div class="tel-footer"><a href="tel:4185724011">(418) 572-4011</a>|<a href="tel:4188094921">(418) 809-4921</a></div><a href="mailto:tactishine@gmail.com">tactishine@gmail.com</a><p style="color:var(--green-l)">Sur rendez-vous</p></div>
   </div>
+   <div class="foot-video">
+    Propulsé par
+    <video autoplay muted loop playsinline>
+      <source src="wintechvideo.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+  </div>
   <div class="foot-bottom"><span>© 2026 Tacti Shine QC — Tous droits réservés</span><span>Studio certifié GYEON · 100% Vétérans 🇨🇦</span></div>
+  
 </footer>
 
 <!-- CURSEUR RADAR -->
