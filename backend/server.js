@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/api/reserver', async (req, res) => {
-  const { nom, tel, courriel, vehicule, service, date, heure, message } = req.body;
+  const { nom, tel, courriel, vehicule, service, date, heure, message } = req.body || {};
 
   if (!nom || !tel || !service || !date || !heure) {
     return res.status(400).json({ error: 'Champs requis manquants.' });

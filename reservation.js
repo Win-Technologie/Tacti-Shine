@@ -12,7 +12,7 @@ bookForm.addEventListener('submit', async (e) => {
   const data = Object.fromEntries(new FormData(bookForm).entries());
 
   try {
-    const res = await fetch('https://tacti-shine-backend.onrender.com/api/reserver', {
+    const res = await fetch('https://tacti-shine.onrender.com/api/reserver', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
