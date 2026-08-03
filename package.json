@@ -1,20 +1,9 @@
 {
-  "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "nodemailer": "^9.0.3",
-    "vercel": "^58.4.0"
-  },
-  "name": "tacti-shine",
+  "name": "tacti-shine-frontend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.html",
+  "description": "Static frontend for Tacti-Shine",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+    "test": "echo \"no build step needed\" && exit 0"
+  }
 }
