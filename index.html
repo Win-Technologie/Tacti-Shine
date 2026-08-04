@@ -15,8 +15,8 @@
   --ink:#0a0b0a;--ink2:#0f110e;--card:#121410;--line:#22261d;--mut:#9aa094;
   --nav-h:96px;
 }
-html{scroll-behavior:smooth}
-body{background:#070807;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
+body{background:#070807;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%}
 img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 section{scroll-margin-top:var(--nav-h)}
@@ -40,7 +40,7 @@ header.scrolled{background:rgba(7,8,7,.96);border-bottom:1px solid #1b1e18}
 .logo .lw .n span{color:var(--green)}
 .logo .lw .t{font-family:'Chakra Petch';font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);margin-top:3px}
 nav.main{display:flex;align-items:center;gap:6px}
-nav.main a{font-family:'Oswald';font-weight:500;text-transform:uppercase;letter-spacing:.05em;font-size:21px;color:#e6e9e3;padding:14px 20px;border-radius:4px;transition:.18s;position:relative}
+nav.main a{font-family:'Oswald';font-weight:500;text-transform:uppercase;letter-spacing:.05em;font-size:clamp(15px,1.3vw,21px);color:#e6e9e3;padding:14px clamp(10px,1.4vw,20px);border-radius:4px;transition:.18s;position:relative}
 nav.main a:hover{color:var(--green-l)}
 nav.main a.cta{background:var(--green);color:#08130a;font-weight:600;margin-left:10px}
 nav.main a.cta:hover{background:var(--green-l)}
@@ -110,7 +110,7 @@ nav.main a.cta:hover{background:var(--green-l)}
 
 /* ===== CARROUSEL défilant ===== */
 #carrousel{background:#070807;overflow:hidden}
-.caro{position:relative;max-width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.caro{position:relative;max-width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
 .caro .track{display:flex;width:max-content;animation:marq 32s linear infinite}
 .caro:hover .track{animation-play-state:paused}
 .caro .slide{position:relative;width:clamp(300px,44vw,560px);aspect-ratio:16/10;margin-right:16px;border-radius:14px;overflow:hidden;border:1px solid var(--line);flex:none}
@@ -124,12 +124,12 @@ nav.main a.cta:hover{background:var(--green-l)}
 
 /* ===== BENTO (4, une plus grande) ===== */
 #portfolio{background:var(--ink2)}
-.bento{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,250px);gap:14px;max-width:1180px;margin:0 auto}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(180px,22vw);gap:14px;max-width:1180px;margin:0 auto}
 .bento .cell{position:relative;overflow:hidden;border-radius:12px;background:#111}
 .bento .cell img{width:100%;height:100%;object-fit:cover}
 .bento .cell .cap{position:absolute;left:14px;bottom:12px;background:rgba(8,10,8,.72);padding:7px 13px;border-radius:4px;font-family:'Chakra Petch';font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#dfe4d8;z-index:2}
 .bento .big{grid-column:span 2;grid-row:span 2}
-@media(max-width:760px){.bento{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,180px)}.bento .big{grid-column:span 2;grid-row:span 1}}
+@media(max-width:760px){.bento{grid-template-columns:1fr 1fr;grid-auto-rows:minmax(150px,38vw)}.bento .big{grid-column:span 2;grid-row:span 1}}
 
 /* ===== SECTIONS PRIX ===== */
 #forfaits{background:#070807}
@@ -227,23 +227,17 @@ nav.main a.cta:hover{background:var(--green-l)}
 
 /* ===== AVANT/APRÈS ===== */
 #avant-apres{background:#0b0d0b}
-.ba{position:relative;max-width:980px;margin:0 auto;aspect-ratio:16/9;border-radius:12px;overflow:hidden;user-select:none;border:1px solid #20251c;box-shadow:0 30px 60px -30px #000}
+.ba{position:relative;max-width:980px;margin:0 auto;aspect-ratio:16/9;border-radius:12px;overflow:hidden;user-select:none;border:1px solid #20251c;box-shadow:0 30px 60px -30px #000;container-type:inline-size}
 .ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .ba .before-w{position:absolute;inset:0;width:50%;overflow:hidden}
-.ba .before-w img{width:980px;max-width:980px;filter:grayscale(.6) contrast(1.05) brightness(.88)}
+.ba .before-w img{position:absolute;top:0;left:0;width:100cqw;max-width:none;height:100%;filter:grayscale(.6) contrast(1.05) brightness(.88)}
 .ba .lab{position:absolute;top:16px;font-family:'Chakra Petch';font-weight:700;font-size:11px;letter-spacing:.14em;padding:7px 13px;border-radius:3px;text-transform:uppercase;z-index:4}
 .ba .lab-a{left:16px;background:rgba(0,0,0,.72);color:#cdd2cb}
 .ba .lab-b{right:16px;background:var(--green);color:#08130a}
 .ba .handle{position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--green-l);transform:translateX(-50%);z-index:5;box-shadow:0 0 22px rgba(156,204,101,.9)}
 .ba .knob{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:#08130a;z-index:6;box-shadow:0 6px 18px rgba(0,0,0,.5);cursor:ew-resize}
 .ba .knob svg{width:24px;height:24px}
-@media(max-width:1045px){.ba .before-w img{width:951px;max-width:980px;}}
-@media(max-width:980px){.ba .before-w img{width:870px;max-width:980px;}}
-@media(max-width:870px){.ba .before-w img{width:780px;max-width:980px;}}
-@media(max-width:760px){.ba .before-w img{width:680px;max-width:980px;}}
-@media(max-width:670px){.ba .before-w img{width:580px;max-width:980px;}}
-@media(max-width:570px){.ba .before-w img{width:500px;max-width:980px;}}
-@media(max-width:520px){.ba .before-w img{width:450px;max-width:980px;}}
+
 
 /* ===== HEROES ===== */
 .heroes{background:linear-gradient(100deg,#0c1207,#0a0b0a);border-top:1px solid #1c2417;border-bottom:1px solid #1c2417;padding:44px 5vw;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;text-align:center}
@@ -366,8 +360,9 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
 }
 
 .foot-video video {
-  width: 27%;
-  height: 25%;
+  width: min(220px, 30vw);
+  aspect-ratio: 16/9;
+  height: auto;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -375,6 +370,9 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
 @media (max-width: 600px) {
   .foot-video {
     flex-direction: column;
+  }
+  .foot-video video {
+    width: min(280px, 70vw);
   }
 }
 </style>
