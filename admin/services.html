@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Services — Panel admin — Tacti Shine QC</title>
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        background: #0a0c09;
+        color: #fff;
+        margin: 0;
+        padding: 40px;
+    }
+
+    h1 {
+        margin: 0 0 24px;
+    }
+
+    #back-link {
+        color: #8fbf95;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid #2a2e26;
+        font-size: 14px;
+    }
+
+    th {
+        color: #888;
+        font-weight: 500;
+    }
+
+    tr.inactive {
+        opacity: 0.45;
+    }
+
+    button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 13px;
+        margin-right: 6px;
+    }
+
+    .btn-primary { background: #3d9e4f; color: #fff; }
+    .btn-secondary { background: #1c211a; color: #ddd; border: 1px solid #2a2e26; }
+    .btn-danger { background: #7a2b2b; color: #fff; }
+
+    #new-service-btn {
+        margin-top: 20px;
+    }
+
+    dialog {
+        background: #0c0f0b;
+        color: #fff;
+        border: 1px solid #2a2e26;
+        border-radius: 10px;
+        padding: 24px;
+        width: 480px;
+        max-width: 90vw;
+    }
+
+    dialog::backdrop {
+        background: rgba(0,0,0,0.6);
+    }
+
+    label {
+        display: block;
+        font-size: 13px;
+        color: #aaa;
+        margin: 14px 0 4px;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 8px 10px;
+        background: #111;
+        border: 1px solid #2a2e26;
+        border-radius: 6px;
+        color: #fff;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    #pricing-grid {
+        display: none;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    #pricing-grid.visible {
+        display: grid;
+    }
+
+    #pricing-grid .grid-label {
+        font-size: 12px;
+        color: #888;
+        align-self: center;
+    }
+
+    .dialog-actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    #form-error {
+        color: #e05656;
+        font-size: 13px;
+        margin-top: 10px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+    <a href="/admin" id="back-link">&larr; Retour au panel</a>
+    <h1>Services</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Durée</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="services-body"></tbody>
+    </table>
+
+    <button id="new-service-btn" class="btn-primary">+ Nouveau service</button>
+
+
+    <dialog id="service-dialog">
+        <form id="service-form">
+
+            <h2 id="dialog-title">Nouveau service</h2>
+
+            <label for="field-id">Identifiant (unique, ex: hivernale)</label>
+            <input type="text" id="field-id" required>
+
+            <label for="field-name">Nom</label>
+            <input type="text" id="field-name" required>
+
+            <label for="field-description">Description</label>
+            <textarea id="field-description" rows="2"></textarea>
+
+            <label for="field-duration">Durée de base (heures, ex: 1.5)</label>
+            <input type="number" id="field-duration" step="0.5" min="0.5" required>
+
+            <label>
+                <input type="checkbox" id="field-is-flat" style="width:auto;display:inline-block;">
+                Prix fixe (pas de variation par véhicule/type)
+            </label>
+
+            <div id="flat-price-field">
+                <label for="field-flat-price">Prix fixe ($)</label>
+                <input type="number" id="field-flat-price" step="0.01" min="0">
+            </div>
+
+            <div id="pricing-grid">
+                <div class="grid-label"></div>
+                <div class="grid-label">Petit véhicule</div>
+                <div class="grid-label">Grand véhicule</div>
+
+                <div class="grid-label">Intérieur</div>
+                <input type="number" id="price-small-interior" step="0.01" min="0">
+                <input type="number" id="price-big-interior" step="0.01" min="0">
+
+                <div class="grid-label">Extérieur</div>
+                <input type="number" id="price-small-exterior" step="0.01" min="0">
+                <input type="number" id="price-big-exterior" step="0.01" min="0">
+
+                <div class="grid-label">Complet</div>
+                <input type="number" id="price-small-complete" step="0.01" min="0">
+                <input type="number" id="price-big-complete" step="0.01" min="0">
+            </div>
+
+            <div id="form-error"></div>
+
+            <div class="dialog-actions">
+                <button type="button" id="cancel-btn" class="btn-secondary">Annuler</button>
+                <button type="submit" class="btn-primary">Enregistrer</button>
+            </div>
+
+        </form>
+    </dialog>
+
+
+    <script>
+
+        let services = [];
+        let editingId = null; // null = création
+
+
+        /* =========================================
+           CHARGEMENT
+        ========================================= */
+
+        async function loadServices() {
+
+            const response = await fetch("/api/admin/services");
+
+            if (response.status === 401) {
+                window.location.href = "/admin/login.html";
+                return;
+            }
+
+            const data = await response.json();
+            services = data.services;
+
+            renderTable();
+        }
+
+
+        function renderTable() {
+
+            const body = document.getElementById("services-body");
+
+            body.innerHTML = services.map(service => {
+
+                const priceLabel = service.flatPrice !== null
+                    ? `${service.flatPrice.toFixed(2)} $`
+                    : (service.pricing.length
+                        ? `${Math.min(...service.pricing.map(p => p.price)).toFixed(2)} $ – ${Math.max(...service.pricing.map(p => p.price)).toFixed(2)} $`
+                        : "—");
+
+                return `
+                    <tr class="${service.active ? "" : "inactive"}">
+                        <td>
+                            <strong>${escapeHtml(service.name)}</strong><br>
+                            <span style="color:#888;font-size:12px;">${escapeHtml(service.id)}</span>
+                        </td>
+                        <td>${service.duration}h</td>
+                        <td>${priceLabel}</td>
+                        <td>${service.active ? "Actif" : "Désactivé"}</td>
+                        <td>
+                            <button class="btn-secondary" onclick="openEdit('${service.id}')">Modifier</button>
+                            <button class="btn-secondary" onclick="toggleActive('${service.id}', ${!service.active})">
+                                ${service.active ? "Désactiver" : "Activer"}
+                            </button>
+                            <button class="btn-danger" onclick="deleteService('${service.id}')">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+
+        function escapeHtml(str) {
+            const div = document.createElement("div");
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+
+        /* =========================================
+           DIALOGUE (créer / modifier)
+        ========================================= */
+
+        const dialog = document.getElementById("service-dialog");
+        const form = document.getElementById("service-form");
+        const isFlatCheckbox = document.getElementById("field-is-flat");
+        const flatPriceField = document.getElementById("flat-price-field");
+        const pricingGrid = document.getElementById("pricing-grid");
+
+
+        function toggleFlatFields() {
+            const isFlat = isFlatCheckbox.checked;
+            flatPriceField.style.display = isFlat ? "block" : "none";
+            pricingGrid.classList.toggle("visible", !isFlat);
+        }
+
+        isFlatCheckbox.addEventListener("change", toggleFlatFields);
+
+
+        document.getElementById("new-service-btn").addEventListener("click", () => {
+
+            editingId = null;
+            document.getElementById("dialog-title").textContent = "Nouveau service";
+
+            form.reset();
+            document.getElementById("field-id").disabled = false;
+            isFlatCheckbox.checked = false;
+            toggleFlatFields();
+            document.getElementById("form-error").style.display = "none";
+
+            dialog.showModal();
+        });
+
+
+        window.openEdit = function (id) {
+
+            const service = services.find(s => s.id === id);
+            if (!service) return;
+
+            editingId = id;
+            document.getElementById("dialog-title").textContent = "Modifier — " + service.name;
+
+            document.getElementById("field-id").value = service.id;
+            document.getElementById("field-id").disabled = true; // l'id ne change pas après création
+            document.getElementById("field-name").value = service.name;
+            document.getElementById("field-description").value = service.description || "";
+            document.getElementById("field-duration").value = service.duration;
+
+            const isFlat = service.flatPrice !== null;
+            isFlatCheckbox.checked = isFlat;
+            toggleFlatFields();
+
+            if (isFlat) {
+                document.getElementById("field-flat-price").value = service.flatPrice;
+            } else {
+                service.pricing.forEach(row => {
+                    const input = document.getElementById(`price-${row.vehicleSize}-${row.cleaningType}`);
+                    if (input) input.value = row.price;
+                });
+            }
+
+            document.getElementById("form-error").style.display = "none";
+
+            dialog.showModal();
+        };
+
+
+        document.getElementById("cancel-btn").addEventListener("click", () => {
+            dialog.close();
+        });
+
+
+        form.addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+            const isFlat = isFlatCheckbox.checked;
+
+            const payload = {
+                id: document.getElementById("field-id").value.trim(),
+                name: document.getElementById("field-name").value.trim(),
+                description: document.getElementById("field-description").value.trim(),
+                duration: parseFloat(document.getElementById("field-duration").value),
+                flatPrice: isFlat
+                    ? parseFloat(document.getElementById("field-flat-price").value)
+                    : null,
+                pricing: isFlat ? [] : [
+                    { vehicleSize: "small", cleaningType: "interior", price: parseFloat(document.getElementById("price-small-interior").value) },
+                    { vehicleSize: "small", cleaningType: "exterior", price: parseFloat(document.getElementById("price-small-exterior").value) },
+                    { vehicleSize: "small", cleaningType: "complete", price: parseFloat(document.getElementById("price-small-complete").value) },
+                    { vehicleSize: "big", cleaningType: "interior", price: parseFloat(document.getElementById("price-big-interior").value) },
+                    { vehicleSize: "big", cleaningType: "exterior", price: parseFloat(document.getElementById("price-big-exterior").value) },
+                    { vehicleSize: "big", cleaningType: "complete", price: parseFloat(document.getElementById("price-big-complete").value) }
+                ]
+            };
+
+            const response = await fetch("/api/admin/services", {
+                method: editingId ? "PUT" : "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                const errorEl = document.getElementById("form-error");
+                errorEl.textContent = data.error || "Une erreur est survenue.";
+                errorEl.style.display = "block";
+                return;
+            }
+
+            dialog.close();
+            loadServices();
+        });
+
+
+        /* =========================================
+           ACTIVER / DÉSACTIVER
+        ========================================= */
+
+        window.toggleActive = async function (id, newActiveState) {
+
+            await fetch("/api/admin/services", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, active: newActiveState })
+            });
+
+            loadServices();
+        };
+
+
+        /* =========================================
+           SUPPRIMER
+        ========================================= */
+
+        window.deleteService = async function (id) {
+
+            if (!confirm("Supprimer ce service définitivement ? Cette action est irréversible.")) {
+                return;
+            }
+
+            await fetch(`/api/admin/services?id=${encodeURIComponent(id)}`, {
+                method: "DELETE"
+            });
+
+            loadServices();
+        };
+
+
+        loadServices();
+
+    </script>
+
+</body>
+</html>

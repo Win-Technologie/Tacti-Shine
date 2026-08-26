@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Panel admin — Tacti Shine QC</title>
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        background: #0a0c09;
+        color: #fff;
+        margin: 0;
+        padding: 40px;
+    }
+
+    #logout {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 8px 16px;
+        border: 1px solid #2a2e26;
+        border-radius: 6px;
+        background: #0c0f0b;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    #checking {
+        color: #888;
+    }
+
+    .nav-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+        max-width: 700px;
+    }
+
+    .nav-card {
+        display: block;
+        background: #0c0f0b;
+        border: 1px solid #2a2e26;
+        border-radius: 10px;
+        padding: 20px;
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .nav-card:hover {
+        border-color: #3d9e4f;
+    }
+
+    .nav-card h3 {
+        margin: 0 0 6px;
+        font-size: 16px;
+    }
+
+    .nav-card p {
+        margin: 0;
+        font-size: 13px;
+        color: #888;
+    }
+</style>
+</head>
+<body>
+
+    <button id="logout">Déconnexion</button>
+
+    <p id="checking">Vérification de la session…</p>
+
+    <div id="admin-content" style="display:none;">
+        <h1>Panel admin</h1>
+
+        <div class="nav-cards">
+
+            <a href="/admin/services" class="nav-card">
+                <h3>Services</h3>
+                <p>Créer, modifier, activer/désactiver les forfaits.</p>
+            </a>
+
+            <a href="/admin/reservations" class="nav-card">
+                <h3>Réservations</h3>
+                <p>Voir et annuler les réservations des clients.</p>
+            </a>
+
+            <a href="/admin/blocked-times" class="nav-card">
+                <h3>Heures bloquées</h3>
+                <p>Bloquer une journée ou une plage d'heures précise.</p>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+
+        /*
+            Ce n'est PAS une vraie barrière de sécurité en
+            soi (le HTML de la page est toujours livré) —
+            la vraie protection vient du fait qu'AUCUNE
+            donnée n'est chargée tant que /api/admin/* n'a
+            pas validé le cookie de session côté serveur.
+            Ce script sert juste à rediriger rapidement les
+            visiteurs non connectés vers la page de login.
+        */
+
+        (async function checkAuth() {
+
+            const response =
+                await fetch("/api/admin/check-session");
+
+            if (!response.ok) {
+                window.location.href = "/admin/login.html";
+                return;
+            }
+
+            document.getElementById("checking").style.display = "none";
+            document.getElementById("admin-content").style.display = "block";
+        })();
+
+
+        document
+            .getElementById("logout")
+            .addEventListener("click", async () => {
+
+                await fetch("/api/admin/logout", { method: "POST" });
+
+                window.location.href = "/admin/login.html";
+            });
+
+    </script>
+
+</body>
+</html>

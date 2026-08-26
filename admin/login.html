@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Connexion admin — Tacti Shine QC</title>
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        background: #0a0c09;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    form {
+        background: #0c0f0b;
+        border: 1px solid #2a2e26;
+        border-radius: 10px;
+        padding: 32px;
+        width: 280px;
+    }
+
+    h1 {
+        font-size: 18px;
+        margin: 0 0 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 14px;
+        border-radius: 6px;
+        border: 1px solid #2a2e26;
+        background: #111;
+        color: #fff;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        background: #3d9e4f;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    #error {
+        color: #e05656;
+        font-size: 13px;
+        margin-top: 10px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+    <form id="login-form">
+        <h1>Connexion admin</h1>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Mot de passe"
+            autocomplete="current-password"
+            required>
+
+        <button type="submit">Se connecter</button>
+
+        <div id="error">Mot de passe incorrect.</div>
+    </form>
+
+    <script>
+        document
+            .getElementById("login-form")
+            .addEventListener("submit", async (e) => {
+
+                e.preventDefault();
+
+                const password =
+                    document.getElementById("password").value;
+
+                const errorEl =
+                    document.getElementById("error");
+
+                errorEl.style.display = "none";
+
+                const response = await fetch("/api/admin/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ password })
+                });
+
+                if (response.ok) {
+                    window.location.href = "/admin";
+                } else {
+                    errorEl.style.display = "block";
+                }
+            });
+    </script>
+
+</body>
+</html>

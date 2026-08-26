@@ -57,83 +57,106 @@ const bookingState = {
     on the calendar.
 */
 
-const services = [
-    {
-        id: "hivernale",
-        name: "Opération Hivernale",
-        description: "L'entretien essentiel pour affronter l'hiver.",
-        duration: 1.5,
-        priceMatrix: {
-            small: { interior: 89, exterior: 89, complete: 149 },
-            big: { interior: 109, exterior: 109, complete: 179 }
-        }
-    },
-    {
-        id: "sergent",
-        name: "Sergent",
-        description: "La remise à niveau complète de votre véhicule.",
-        duration: 3,
-        priceMatrix: {
-            small: { interior: 175, exterior: 175, complete: 299 },
-            big: { interior: 225, exterior: 225, complete: 399 }
-        }
-    },
-    {
-        id: "major",
-        name: "Major",
-        description: "Notre service d'esthétique le plus complet, pour une remise à neuf haut de gamme.",
-        duration: 4,
-        priceMatrix: {
-            small: { interior: 225, exterior: 225, complete: 399 },
-            big: { interior: 275, exterior: 275, complete: 499 }
-        }
-    },
-    {
-        id: "annuel",
-        name: "Entretien annuel — Revêtement céramique Infinite",
-        description: "Réservé aux véhicules munis d'un revêtement céramique GYEON Infinite installé par Tacti Shine QC. Restaure la brillance et les propriétés hydrophobes du revêtement.",
-        duration: 1.5,
-        flatPrice: 299
-        /*
-            No priceMatrix — this forfait has one
-            fixed price and skips the vehicle
-            size / cleaning type step entirely
-            (see serviceNext below).
-        */
-    }
-];
+/*
+    FORFAITS
+
+    Chargés depuis /api/services au démarrage (voir
+    loadServicesFromApi plus bas) — reflète en temps réel
+    ce qui est actif dans le panel admin. Le tableau reste
+    vide jusqu'à ce que le fetch initial se termine.
+*/
+
+let services = [];
 
 
 /*
     POLISSAGE UNE ÉTAPE (ADD-ON)
 
-    Optional add-on offered whenever
-    Sergent or Major is the selected
-    forfait, regardless of vehicle size
-    or cleaning type.
-
-    duration is a PLACEHOLDER — update
-    once you confirm real timing.
+    Chargé lui aussi depuis /api/services (le champ
+    "addons"). null tant que le fetch initial n'est
+    pas terminé, ou s'il n'y a pas d'add-on nommé
+    "polissage" actif côté serveur.
 */
 
-const polissageAddon = {
-    id: "polissage",
-    name: "Polissage une étape",
-    description: "Correction esthétique en une étape pour raviver la peinture et éliminer les micro-rayures.",
-    price: 299,
-    duration: 2
-};
+let polissageAddon = null;
 
 function isPolissageEligible() {
 
-    if (!bookingState.service) {
+    if (!bookingState.service || !polissageAddon) {
         return false;
     }
 
-    return (
-        bookingState.service.id === "sergent" ||
-        bookingState.service.id === "major"
-    );
+    const eligibleIds = polissageAddon.eligibleServiceIds || [];
+
+    // Une liste vide veut dire "éligible pour tous les services"
+    if (eligibleIds.length === 0) {
+        return true;
+    }
+
+    return eligibleIds.includes(bookingState.service.id);
+}
+
+
+/*
+    LOAD SERVICES FROM API
+
+    Va chercher les forfaits et add-ons réels en base,
+    convertit la grille de prix plate (pricing: [...])
+    en priceMatrix imbriqué (le format que le reste du
+    fichier attend déjà), et retourne true/false selon
+    le succès.
+*/
+
+async function loadServicesFromApi() {
+
+    try {
+
+        const response = await fetch("/api/services");
+
+        if (!response.ok) {
+            throw new Error("Réponse non-OK de /api/services");
+        }
+
+        const data = await response.json();
+
+        services = data.services.map(service => {
+
+            const converted = {
+                id: service.id,
+                name: service.name,
+                description: service.description,
+                duration: service.duration
+            };
+
+            if (service.flatPrice !== null) {
+
+                converted.flatPrice = service.flatPrice;
+
+            } else {
+
+                const priceMatrix = { small: {}, big: {} };
+
+                service.pricing.forEach(row => {
+                    priceMatrix[row.vehicleSize][row.cleaningType] = row.price;
+                });
+
+                converted.priceMatrix = priceMatrix;
+            }
+
+            return converted;
+        });
+
+        polissageAddon =
+            data.addons.find(addon => addon.id === "polissage") || null;
+
+        return true;
+
+    } catch (error) {
+
+        console.error("Impossible de charger les services:", error);
+
+        return false;
+    }
 }
 
 
@@ -363,22 +386,6 @@ function formatDuration(hours) {
 
 
 /*
-    TEMPORARY BUSINESS HOURS
-
-    Later this will come from the backend.
-*/
-
-const businessHours = {
-    0: null, // Sunday
-    1: { start: 9, end: 17 },
-    2: { start: 9, end: 17 },
-    3: { start: 9, end: 17 },
-    4: { start: 9, end: 17 },
-    5: { start: 9, end: 17 },
-    6: { start: 10, end: 15 }
-};
-
-
 /*
     CALENDAR
 */
@@ -445,11 +452,36 @@ const newBooking =
    INITIALIZE
 ========================================= */
 
-renderServices();
+async function initBooking() {
 
-renderVehicleOptions();
+    servicesList.innerHTML = `
+        <p style="color:#888;">Chargement des forfaits...</p>
+    `;
 
-renderCalendar();
+    const loaded = await loadServicesFromApi();
+
+    if (!loaded || services.length === 0) {
+
+        servicesList.innerHTML = `
+            <p style="color:#e05656;">
+                Impossible de charger les forfaits pour le moment.
+                Veuillez rafraîchir la page ou réessayer plus tard.
+            </p>
+        `;
+
+        return;
+    }
+
+    renderServices();
+
+    populatePolissagePanelText();
+
+    renderVehicleOptions();
+
+    renderCalendar();
+}
+
+initBooking();
 
 
 /* =========================================
@@ -705,14 +737,28 @@ function renderVehicleOptions() {
     duration on top of the base selection.
 ========================================= */
 
-polissageAddonPanel.querySelector("#polissage-addon-name").textContent =
-    polissageAddon.name;
+/*
+    Rempli le texte du panneau add-on — appelée après
+    que loadServicesFromApi() ait chargé polissageAddon
+    (ne peut pas s'exécuter au chargement du script,
+    puisque polissageAddon est encore null à ce moment).
+*/
 
-polissageAddonPanel.querySelector("#polissage-addon-description").textContent =
-    polissageAddon.description;
+function populatePolissagePanelText() {
 
-polissageAddonPanel.querySelector("#polissage-addon-price").textContent =
-    `+${polissageAddon.price.toFixed(2)} $`;
+    if (!polissageAddon) {
+        return;
+    }
+
+    polissageAddonPanel.querySelector("#polissage-addon-name").textContent =
+        polissageAddon.name;
+
+    polissageAddonPanel.querySelector("#polissage-addon-description").textContent =
+        polissageAddon.description;
+
+    polissageAddonPanel.querySelector("#polissage-addon-price").textContent =
+        `+${polissageAddon.price.toFixed(2)} $`;
+}
 
 
 function updatePolissageEligibility() {
@@ -956,20 +1002,46 @@ async function loadAvailableTimes() {
         "Chargement des heures disponibles...";
 
 
-    /*
-        TEMPORARY MOCK
+    let availableTimes = [];
 
-        Later replace with:
+    try {
 
-        fetch(
-            `/api/availability?date=${bookingState.date}&serviceId=${bookingState.service.id}`
-        )
-    */
+        const params = new URLSearchParams({
+            date: bookingState.date,
+            serviceId: bookingState.service.id
+        });
 
-    await wait(400);
+        if (bookingState.vehicleSize) {
+            params.set("vehicleSize", bookingState.vehicleSize.id);
+        }
 
-    const availableTimes =
-        calculateMockAvailability();
+        if (bookingState.cleaningType) {
+            params.set("cleaningType", bookingState.cleaningType.id);
+        }
+
+        if (bookingState.polissage && polissageAddon) {
+            params.set("addonIds", polissageAddon.id);
+        }
+
+        const response = await fetch(`/api/availability?${params.toString()}`);
+
+        if (!response.ok) {
+            throw new Error("Réponse non-OK de /api/availability");
+        }
+
+        const data = await response.json();
+
+        availableTimes = data.availableTimes || [];
+
+    } catch (error) {
+
+        console.error("Impossible de charger les disponibilités:", error);
+
+        loadingTimes.textContent =
+            "Impossible de charger les heures disponibles. Veuillez réessayer.";
+
+        return;
+    }
 
 
     loadingTimes.style.display = "none";
@@ -1002,46 +1074,6 @@ async function loadAvailableTimes() {
 
         timeGrid.appendChild(button);
     });
-}
-
-
-/* =========================================
-   MOCK AVAILABILITY
-========================================= */
-
-function calculateMockAvailability() {
-
-    if (!selectedCalendarDate || !bookingState.service) {
-        return [];
-    }
-
-    const day =
-        selectedCalendarDate.getDay();
-
-    const hours =
-        businessHours[day];
-
-    if (!hours) {
-        return [];
-    }
-
-    const duration =
-        bookingState.duration;
-
-    const available = [];
-
-    for (
-        let hour = hours.start;
-        hour + duration <= hours.end;
-        hour++
-    ) {
-
-        available.push(
-            `${String(hour).padStart(2, "0")}:00`
-        );
-    }
-
-    return available;
 }
 
 
@@ -1134,7 +1166,7 @@ timeNext.addEventListener("click", () => {
    CUSTOMER FORM
 ========================================= */
 
-customerForm.addEventListener("submit", event => {
+customerForm.addEventListener("submit", async event => {
 
     event.preventDefault();
 
@@ -1168,20 +1200,75 @@ customerForm.addEventListener("submit", event => {
         document.getElementById("extra-info").value.trim();
 
 
-    /*
-        Later:
+    const submitButton =
+        customerForm.querySelector('button[type="submit"]');
 
-        POST /api/holds
+    submitButton.disabled = true;
+    submitButton.textContent = "Verrouillage du créneau...";
 
-        The backend temporarily locks
-        the selected time.
-    */
+    try {
 
-    createMockHold();
+        const payload = {
+            date: bookingState.date,
+            serviceId: bookingState.service.id,
+            vehicleSize: bookingState.vehicleSize ? bookingState.vehicleSize.id : null,
+            cleaningType: bookingState.cleaningType ? bookingState.cleaningType.id : null,
+            addonIds: bookingState.polissage && polissageAddon ? [polissageAddon.id] : [],
+            startTime: bookingState.startTime
+        };
 
-    renderBookingSummary();
+        const response = await fetch("/api/holds", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
 
-    goToStep(5);
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            if (response.status === 409) {
+
+                alert(
+                    data.error || "Ce créneau vient d'être pris. Veuillez en choisir un autre."
+                );
+
+                goToStep(3);
+                loadAvailableTimes();
+
+            } else {
+
+                alert(data.error || "Une erreur est survenue. Veuillez réessayer.");
+            }
+
+            return;
+        }
+
+        // Le serveur est la source de vérité pour le prix/la durée
+        bookingState.holdId = data.holdId;
+        bookingState.holdExpiresAt = new Date(data.holdExpiresAt).getTime();
+        bookingState.startTime = data.startTime;
+        bookingState.endTime = data.endTime;
+        bookingState.duration = data.duration;
+        bookingState.price = data.price;
+
+        startHoldCountdown();
+
+        renderBookingSummary();
+
+        goToStep(5);
+
+    } catch (error) {
+
+        console.error("Impossible de verrouiller le créneau:", error);
+
+        alert("Une erreur est survenue. Veuillez réessayer.");
+
+    } finally {
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Vérifier la réservation";
+    }
 });
 
 
@@ -1366,25 +1453,7 @@ function renderBookingSummary() {
 }
 
 
-/* =========================================
-   MOCK HOLD
-========================================= */
-
 let holdTimer = null;
-
-function createMockHold() {
-
-    const expiration =
-        Date.now() + 10 * 60 * 1000;
-
-    bookingState.holdId =
-        "mock-hold-" + Date.now();
-
-    bookingState.holdExpiresAt =
-        expiration;
-
-    startHoldCountdown();
-}
 
 
 /* =========================================
@@ -1459,37 +1528,41 @@ confirmBooking.addEventListener("click", async () => {
 
     try {
 
-        /*
-            LATER:
+        const payload = {
+            holdId: bookingState.holdId,
+            customerName: bookingState.customerName,
+            phone: bookingState.phone,
+            email: bookingState.email,
+            vehicleMake: bookingState.vehicleMake,
+            vehicleModel: bookingState.vehicleModel,
+            vehicleYear: bookingState.vehicleYear,
+            extraInfo: bookingState.extraInfo
+        };
 
-            POST /api/bookings/confirm
+        const response = await fetch("/api/bookings/confirm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
 
-            Example payload:
+        const data = await response.json();
 
-            {
-                holdId,
-                customerName,
-                phone,
-                email,
-                vehicleMake,
-                vehicleModel,
-                vehicleYear,
-                extraInfo
+        if (!response.ok) {
+
+            if (response.status === 410) {
+
+                // Le hold a expiré entre-temps
+                alert(data.error || "Votre réservation temporaire a expiré. Veuillez recommencer.");
+
+                resetBooking();
+
+                return;
             }
-        */
 
+            throw new Error(data.error || "Erreur lors de la confirmation");
+        }
 
-        await wait(1000);
-
-
-        const bookingNumber =
-            "BK-" +
-            Math.floor(
-                10000 + Math.random() * 90000
-            );
-
-
-        showConfirmation(bookingNumber);
+        showConfirmation(data.bookingNumber);
 
 
     } catch (error) {
@@ -1497,7 +1570,7 @@ confirmBooking.addEventListener("click", async () => {
         console.error(error);
 
         alert(
-            "Une erreur est survenue. Veuillez réessayer."
+            error.message || "Une erreur est survenue. Veuillez réessayer."
         );
 
         confirmBooking.disabled = false;

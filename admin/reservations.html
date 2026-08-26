@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Réservations — Panel admin — Tacti Shine QC</title>
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        background: #0a0c09;
+        color: #fff;
+        margin: 0;
+        padding: 40px;
+    }
+
+    h1 { margin: 0 0 24px; }
+
+    #back-link {
+        color: #8fbf95;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .filters {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .filters input, .filters select {
+        padding: 8px 10px;
+        background: #111;
+        border: 1px solid #2a2e26;
+        border-radius: 6px;
+        color: #fff;
+        font-family: inherit;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid #2a2e26;
+        font-size: 14px;
+    }
+
+    th { color: #888; font-weight: 500; }
+
+    tr.cancelled { opacity: 0.4; }
+
+    .status-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+    }
+
+    .status-confirmed { background: #1c3d24; color: #7ecb8a; }
+    .status-cancelled { background: #3d1c1c; color: #cb7e7e; }
+
+    button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 13px;
+        background: #7a2b2b;
+        color: #fff;
+    }
+
+    #empty {
+        color: #888;
+        margin-top: 20px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+    <a href="/admin" id="back-link">&larr; Retour au panel</a>
+    <h1>Réservations</h1>
+
+    <div class="filters">
+        <label>Date : <input type="date" id="filter-date"></label>
+        <button id="clear-filter" style="background:#1c211a;">Effacer le filtre</button>
+        <label style="margin-left:auto;">
+            <input type="checkbox" id="filter-upcoming" checked style="width:auto;">
+            À venir seulement
+        </label>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Client</th>
+                <th>Service</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="bookings-body"></tbody>
+    </table>
+
+    <p id="empty">Aucune réservation trouvée.</p>
+
+
+    <script>
+
+        function escapeHtml(str) {
+            const div = document.createElement("div");
+            div.textContent = str || "";
+            return div.innerHTML;
+        }
+
+
+        async function loadBookings() {
+
+            const date = document.getElementById("filter-date").value;
+            const upcoming = document.getElementById("filter-upcoming").checked;
+
+            let url = "/api/admin/bookings";
+
+            if (date) {
+                url += `?date=${date}`;
+            } else if (upcoming) {
+                url += `?upcoming=true`;
+            }
+
+            const response = await fetch(url);
+
+            if (response.status === 401) {
+                window.location.href = "/admin/login.html";
+                return;
+            }
+
+            const data = await response.json();
+            renderTable(data.bookings);
+        }
+
+
+        function renderTable(bookings) {
+
+            const body = document.getElementById("bookings-body");
+            const empty = document.getElementById("empty");
+
+            if (bookings.length === 0) {
+                body.innerHTML = "";
+                empty.style.display = "block";
+                return;
+            }
+
+            empty.style.display = "none";
+
+            body.innerHTML = bookings.map(b => `
+                <tr class="${b.status === 'cancelled' ? 'cancelled' : ''}">
+                    <td>${escapeHtml(b.bookingNumber)}</td>
+                    <td>${escapeHtml(b.date)}</td>
+                    <td>${escapeHtml(b.startTime)} → ${escapeHtml(b.endTime)}</td>
+                    <td>
+                        ${escapeHtml(b.customerName)}<br>
+                        <span style="color:#888;font-size:12px;">${escapeHtml(b.customerPhone)}</span>
+                    </td>
+                    <td>
+                        ${escapeHtml(b.serviceId)}
+                        ${b.vehicleSize ? " · " + escapeHtml(b.vehicleSize) : ""}
+                        ${b.cleaningType ? " · " + escapeHtml(b.cleaningType) : ""}
+                    </td>
+                    <td>${b.price.toFixed(2)} $</td>
+                    <td>
+                        <span class="status-badge status-${b.status}">
+                            ${b.status === "cancelled" ? "Annulée" : "Confirmée"}
+                        </span>
+                    </td>
+                    <td>
+                        ${b.status !== "cancelled"
+                            ? `<button onclick="cancelBooking('${b.id}')">Annuler</button>`
+                            : ""}
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+
+        window.cancelBooking = async function (id) {
+
+            if (!confirm("Annuler cette réservation ?")) {
+                return;
+            }
+
+            await fetch("/api/admin/bookings", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, status: "cancelled" })
+            });
+
+            loadBookings();
+        };
+
+
+        document.getElementById("filter-date").addEventListener("change", loadBookings);
+        document.getElementById("filter-upcoming").addEventListener("change", loadBookings);
+
+        document.getElementById("clear-filter").addEventListener("click", () => {
+            document.getElementById("filter-date").value = "";
+            loadBookings();
+        });
+
+
+        loadBookings();
+
+    </script>
+
+</body>
+</html>
