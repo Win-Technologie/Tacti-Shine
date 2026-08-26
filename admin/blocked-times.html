@@ -1,257 +1,242 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Heures bloquées — Panel admin — Tacti Shine QC</title>
-<style>
-    body {
-        font-family: system-ui, sans-serif;
-        background: #0a0c09;
-        color: #fff;
-        margin: 0;
-        padding: 40px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heures bloquées · Admin · Tacti Shine QC</title>
+    <link rel="icon" type="image/jpg" href="../tacti-shine.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#070807; color:#e0e4dc; font-family:'Plus Jakarta Sans',sans-serif; padding:2rem; }
+        .container { max-width:800px; margin:0 auto; }
+        .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1e221b; padding-bottom:1rem; margin-bottom:2rem; }
+        .header h1 { font-family:'Oswald'; font-weight:700; text-transform:uppercase; font-size:2rem; letter-spacing:.05em; }
+        .header h1 span { color:#7cb342; }
+        .header a { color:#7cb342; text-decoration:none; border:1px solid #2e3429; padding:0.3rem 1rem; border-radius:4px; font-size:0.8rem; transition:.2s; }
+        .header a:hover { background:#7cb342; color:#08130a; border-color:#7cb342; }
+        .back-link { color:#9aa094; text-decoration:none; font-size:0.85rem; display:inline-block; margin-bottom:1rem; }
+        .back-link:hover { color:#7cb342; }
+        .card { background:#121410; border:1px solid #22261d; border-radius:12px; padding:1.2rem 1.5rem 1.8rem; margin-bottom:1.5rem; }
+        .card h3 { font-family:'Oswald'; font-weight:600; text-transform:uppercase; font-size:1.1rem; margin-bottom:0.6rem; }
+        .card .sub { color:#7a8073; font-size:0.85rem; margin-bottom:1rem; line-height:1.5; }
 
-    h1 { margin: 0 0 24px; }
+        label { display:block; font-size:0.7rem; text-transform:uppercase; color:#7a8073; margin:0.9rem 0 0.3rem; letter-spacing:.03em; }
+        input { width:100%; padding:0.5rem 0.6rem; background:#0a0c09; border:1px solid #262a21; border-radius:4px; color:#e0e4dc; font-family:'Plus Jakarta Sans'; font-size:0.85rem; box-sizing:border-box; }
+        input:focus { outline:none; border-color:#7cb342; }
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator { filter:brightness(0) invert(1); cursor:pointer; }
 
-    #back-link {
-        color: #8fbf95;
-        text-decoration: none;
-        font-size: 14px;
-    }
+        .checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.9rem; }
+        .checkbox-row input { width:auto; }
+        .checkbox-row label { margin:0; text-transform:none; font-size:0.85rem; color:#e0e4dc; }
 
-    form {
-        background: #0c0f0b;
-        border: 1px solid #2a2e26;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 24px 0;
-        max-width: 480px;
-    }
+        .time-row { display:flex; gap:0.8rem; }
+        .time-row > div { flex:1; }
 
-    label {
-        display: block;
-        font-size: 13px;
-        color: #aaa;
-        margin: 12px 0 4px;
-    }
+        .btn { background:#7cb342; color:#08130a; border:none; padding:0.5rem 1.4rem; border-radius:4px; font-family:'Oswald'; font-weight:600; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; font-size:0.8rem; transition:.2s; }
+        .btn:hover { background:#9ccc65; }
+        .btn.danger { background:#b33; color:#fff; padding:0.3rem 1rem; font-size:0.7rem; }
+        .btn.danger:hover { background:#d44; }
+        #submit-btn { margin-top:1.2rem; }
 
-    input {
-        width: 100%;
-        padding: 8px 10px;
-        background: #111;
-        border: 1px solid #2a2e26;
-        border-radius: 6px;
-        color: #fff;
-        box-sizing: border-box;
-        font-family: inherit;
-    }
+        table { width:100%; border-collapse:collapse; margin-top:0.5rem; }
+        th, td { text-align:left; padding:0.6rem 0.7rem; border-bottom:1px solid #1a1d18; font-size:0.85rem; }
+        th { color:#7a8073; font-weight:600; font-family:'Oswald'; text-transform:uppercase; font-size:0.7rem; letter-spacing:.04em; }
 
-    .time-row {
-        display: flex;
-        gap: 10px;
-    }
+        #empty { color:#7a8073; margin-top:1rem; font-size:0.85rem; display:none; }
 
-    .time-row > div { flex: 1; }
+        .toast { position:fixed; bottom:2rem; right:2rem; background:#121410; border:1px solid #7cb342; padding:0.8rem 1.6rem; border-radius:8px; color:#e0e4dc; font-family:'Chakra Petch'; font-size:0.9rem; box-shadow:0 8px 30px rgba(0,0,0,0.6); transform:translateY(120%); transition:transform .3s ease; z-index:999; }
+        .toast.show { transform:translateY(0); }
+        .toast.error { border-color:#b33; }
+        .toast strong { color:#7cb342; }
+        .toast.error strong { color:#e07a5f; }
 
-    button {
-        font-family: inherit;
-        cursor: pointer;
-        border: none;
-        border-radius: 6px;
-        padding: 8px 14px;
-        font-size: 13px;
-    }
-
-    #submit-btn {
-        margin-top: 16px;
-        background: #3d9e4f;
-        color: #fff;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-
-    th, td {
-        text-align: left;
-        padding: 10px 12px;
-        border-bottom: 1px solid #2a2e26;
-        font-size: 14px;
-    }
-
-    th { color: #888; font-weight: 500; }
-
-    .btn-danger { background: #7a2b2b; color: #fff; }
-
-    #empty {
-        color: #888;
-        margin-top: 16px;
-        display: none;
-    }
-</style>
+        @media(max-width:600px){ body { padding:1rem; } }
+    </style>
 </head>
 <body>
+<div class="container">
+    <div class="header">
+        <h1><span>Heures bloquées</span></h1>
+        <a href="../index.html">← Site</a>
+    </div>
+    <a href="index.html" class="back-link">← Retour au tableau de bord</a>
 
-    <a href="/admin" id="back-link">&larr; Retour au panel</a>
-    <h1>Heures bloquées</h1>
-    <p style="color:#888;">
-        Bloque une journée complète (vacances, congé) ou seulement une plage
-        d'heures (ex: rendez-vous personnel, pause). Les créneaux bloqués
-        n'apparaîtront plus comme disponibles sur le calendrier public.
-    </p>
+    <div class="card">
+        <h3>Bloquer un créneau</h3>
+        <p class="sub">
+            Bloque une journée complète (vacances, congé) ou seulement une plage
+            d'heures (ex: rendez-vous personnel, pause). Les créneaux bloqués
+            n'apparaîtront plus comme disponibles sur le calendrier public.
+        </p>
 
-    <form id="block-form">
+        <form id="block-form">
 
-        <label for="field-date">Date</label>
-        <input type="date" id="field-date" required>
+            <label for="field-date">Date</label>
+            <input type="date" id="field-date" required>
 
-        <label>
-            <input type="checkbox" id="field-whole-day" checked style="width:auto;display:inline-block;">
-            Bloquer la journée complète
-        </label>
-
-        <div id="time-fields" class="time-row" style="display:none;">
-            <div>
-                <label for="field-start">De</label>
-                <input type="time" id="field-start">
+            <div class="checkbox-row">
+                <input type="checkbox" id="field-whole-day" checked>
+                <label for="field-whole-day">Bloquer la journée complète</label>
             </div>
-            <div>
-                <label for="field-end">À</label>
-                <input type="time" id="field-end">
+
+            <div id="time-fields" class="time-row" style="display:none;">
+                <div>
+                    <label for="field-start">De</label>
+                    <input type="time" id="field-start">
+                </div>
+                <div>
+                    <label for="field-end">À</label>
+                    <input type="time" id="field-end">
+                </div>
             </div>
-        </div>
 
-        <label for="field-reason">Raison (optionnel, pour toi seulement)</label>
-        <input type="text" id="field-reason" placeholder="ex: Vacances, rendez-vous perso...">
+            <label for="field-reason">Raison (optionnel, pour toi seulement)</label>
+            <input type="text" id="field-reason" placeholder="ex: Vacances, rendez-vous perso...">
 
-        <button type="submit" id="submit-btn">Bloquer</button>
+            <button type="submit" class="btn" id="submit-btn">Bloquer</button>
 
-    </form>
+        </form>
+    </div>
 
+    <div class="card">
+        <h3>Blocages à venir</h3>
 
-    <h2>Blocages à venir</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Heures</th>
-                <th>Raison</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="blocks-body"></tbody>
-    </table>
-
-    <p id="empty">Aucun blocage à venir.</p>
-
-
-    <script>
-
-        function escapeHtml(str) {
-            const div = document.createElement("div");
-            div.textContent = str || "";
-            return div.innerHTML;
-        }
-
-
-        document.getElementById("field-whole-day").addEventListener("change", (e) => {
-            document.getElementById("time-fields").style.display =
-                e.target.checked ? "none" : "flex";
-        });
-
-
-        async function loadBlocks() {
-
-            const response = await fetch("/api/admin/blocked-times");
-
-            if (response.status === 401) {
-                window.location.href = "/admin/login.html";
-                return;
-            }
-
-            const data = await response.json();
-            renderTable(data.blockedTimes);
-        }
-
-
-        function renderTable(blocks) {
-
-            const body = document.getElementById("blocks-body");
-            const empty = document.getElementById("empty");
-
-            if (blocks.length === 0) {
-                body.innerHTML = "";
-                empty.style.display = "block";
-                return;
-            }
-
-            empty.style.display = "none";
-
-            body.innerHTML = blocks.map(b => `
+        <table>
+            <thead>
                 <tr>
-                    <td>${escapeHtml(b.date)}</td>
-                    <td>${b.wholeDay ? "Journée complète" : `${escapeHtml(b.startTime)} → ${escapeHtml(b.endTime)}`}</td>
-                    <td>${escapeHtml(b.reason) || "—"}</td>
-                    <td><button class="btn-danger" onclick="removeBlock('${b.id}')">Retirer</button></td>
+                    <th>Date</th>
+                    <th>Heures</th>
+                    <th>Raison</th>
+                    <th></th>
                 </tr>
-            `).join("");
+            </thead>
+            <tbody id="blocks-body"></tbody>
+        </table>
+
+        <p id="empty">Aucun blocage à venir.</p>
+    </div>
+</div>
+
+<div id="toast" class="toast">✅ <strong>Enregistré</strong></div>
+
+
+<script>
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+    }
+
+    function showToast(msg, isError) {
+        const t = document.getElementById('toast');
+        t.innerHTML = msg;
+        t.classList.toggle('error', !!isError);
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+
+    document.getElementById('field-whole-day').addEventListener('change', (e) => {
+        document.getElementById('time-fields').style.display =
+            e.target.checked ? 'none' : 'flex';
+    });
+
+
+    async function loadBlocks() {
+
+        const response = await fetch('/api/admin/blocked-times');
+
+        if (response.status === 401) {
+            window.location.href = '/admin/login.html';
+            return;
         }
 
-
-        document.getElementById("block-form").addEventListener("submit", async (e) => {
-
-            e.preventDefault();
-
-            const wholeDay = document.getElementById("field-whole-day").checked;
-
-            const payload = {
-                date: document.getElementById("field-date").value,
-                startTime: wholeDay ? null : document.getElementById("field-start").value,
-                endTime: wholeDay ? null : document.getElementById("field-end").value,
-                reason: document.getElementById("field-reason").value.trim()
-            };
-
-            const response = await fetch("/api/admin/blocked-times", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                alert(data.error || "Erreur lors du blocage.");
-                return;
-            }
-
-            document.getElementById("block-form").reset();
-            document.getElementById("field-whole-day").checked = true;
-            document.getElementById("time-fields").style.display = "none";
-
-            loadBlocks();
-        });
+        const data = await response.json();
+        renderTable(data.blockedTimes);
+    }
 
 
-        window.removeBlock = async function (id) {
+    function renderTable(blocks) {
 
-            if (!confirm("Retirer ce blocage ?")) {
-                return;
-            }
+        const body = document.getElementById('blocks-body');
+        const empty = document.getElementById('empty');
 
-            await fetch(`/api/admin/blocked-times?id=${encodeURIComponent(id)}`, {
-                method: "DELETE"
-            });
+        if (blocks.length === 0) {
+            body.innerHTML = '';
+            empty.style.display = 'block';
+            return;
+        }
 
-            loadBlocks();
+        empty.style.display = 'none';
+
+        body.innerHTML = blocks.map(b => `
+            <tr>
+                <td>${escapeHtml(String(b.date).slice(0, 10))}</td>
+                <td>${b.wholeDay ? 'Journée complète' : `${escapeHtml(b.startTime)} → ${escapeHtml(b.endTime)}`}</td>
+                <td>${escapeHtml(b.reason) || '—'}</td>
+                <td><button type="button" class="btn danger" onclick="removeBlock('${b.id}')">Retirer</button></td>
+            </tr>
+        `).join('');
+    }
+
+
+    document.getElementById('block-form').addEventListener('submit', async (e) => {
+
+        e.preventDefault();
+
+        const wholeDay = document.getElementById('field-whole-day').checked;
+
+        const payload = {
+            date: document.getElementById('field-date').value,
+            startTime: wholeDay ? null : document.getElementById('field-start').value,
+            endTime: wholeDay ? null : document.getElementById('field-end').value,
+            reason: document.getElementById('field-reason').value.trim()
         };
 
+        const response = await fetch('/api/admin/blocked-times', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            showToast('⚠️ <strong>' + (data.error || 'Erreur lors du blocage.') + '</strong>', true);
+            return;
+        }
+
+        document.getElementById('block-form').reset();
+        document.getElementById('field-whole-day').checked = true;
+        document.getElementById('time-fields').style.display = 'none';
+
+        showToast('✅ <strong>Créneau bloqué</strong>');
         loadBlocks();
+    });
 
-    </script>
+
+    window.removeBlock = async function (id) {
+
+        if (!confirm('Retirer ce blocage ?')) {
+            return;
+        }
+
+        await fetch(`/api/admin/blocked-times?id=${encodeURIComponent(id)}`, {
+            method: 'DELETE'
+        });
+
+        showToast('✅ <strong>Blocage retiré</strong>');
+        loadBlocks();
+    };
+
+
+    loadBlocks();
+
+</script>
 
 </body>
 </html>

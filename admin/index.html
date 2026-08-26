@@ -1,89 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Panel admin — Tacti Shine QC</title>
-<style>
-    body {
-        font-family: system-ui, sans-serif;
-        background: #0a0c09;
-        color: #fff;
-        margin: 0;
-        padding: 40px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · Tacti Shine QC</title>
+    <link rel="icon" type="image/jpg" href="../tacti-shine.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Chakra+Petch:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#070807; color:#e0e4dc; font-family:'Plus Jakarta Sans',sans-serif; padding:2rem; }
+        .admin-container { max-width:1200px; margin:0 auto; display:none; }
+        h1 { font-family:'Oswald'; font-weight:700; text-transform:uppercase; font-size:2.4rem; letter-spacing:.05em; }
+        h1 span { color:#7cb342; }
+        .subhead { color:#9aa094; margin-bottom:2.5rem; border-bottom:1px solid #1e221b; padding-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+        .subhead .links { display:flex; gap:0.6rem; }
+        .subhead a { color:#7cb342; text-decoration:none; border:1px solid #2e3429; padding:0.4rem 1.2rem; border-radius:4px; font-size:0.8rem; transition:.2s; cursor:pointer; background:none; font-family:inherit; }
+        .subhead a:hover, .subhead button:hover { background:#7cb342; color:#08130a; border-color:#7cb342; }
+        .subhead button { color:#e07a5f; text-decoration:none; border:1px solid #3d2420; padding:0.4rem 1.2rem; border-radius:4px; font-size:0.8rem; transition:.2s; cursor:pointer; background:none; font-family:inherit; }
+        .subhead button:hover { background:#e07a5f; color:#08130a; border-color:#e07a5f; }
+        .dashboard-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+        .dash-card { background:#121410; border:1px solid #22261d; border-radius:12px; padding:1.8rem 1.5rem; transition:.2s; text-decoration:none; color:#e0e4dc; display:block; }
+        .dash-card:hover { border-color:#7cb342; transform:translateY(-3px); }
+        .dash-card.disabled { opacity:0.55; cursor:default; }
+        .dash-card.disabled:hover { border-color:#22261d; transform:none; }
+        .dash-card h3 { font-family:'Oswald'; font-weight:600; text-transform:uppercase; font-size:1.2rem; letter-spacing:.05em; }
+        .dash-card p { color:#7a8073; font-size:0.9rem; margin-top:0.3rem; line-height:1.5; }
+        .dash-card .badge { display:inline-block; background:#1e221b; padding:0.1rem 0.6rem; border-radius:20px; font-size:0.6rem; color:#9aa094; letter-spacing:.05em; margin-top:0.5rem; }
+        .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:1rem; margin-bottom:2rem; }
+        .stat-box { background:#0c0f0b; border:1px solid #1e221b; border-radius:8px; padding:1rem; text-align:center; }
+        .stat-box .num { font-family:'Rajdhani'; font-weight:700; font-size:2rem; color:#7cb342; }
+        .stat-box .label { color:#7a8073; font-size:0.7rem; text-transform:uppercase; letter-spacing:.06em; }
+        @media(max-width:600px){ body { padding:1rem; } }
 
-    #logout {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        padding: 8px 16px;
-        border: 1px solid #2a2e26;
-        border-radius: 6px;
-        background: #0c0f0b;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    #checking {
-        color: #888;
-    }
-
-    .nav-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin-top: 24px;
-        max-width: 700px;
-    }
-
-    .nav-card {
-        display: block;
-        background: #0c0f0b;
-        border: 1px solid #2a2e26;
-        border-radius: 10px;
-        padding: 20px;
-        text-decoration: none;
-        color: #fff;
-    }
-
-    .nav-card:hover {
-        border-color: #3d9e4f;
-    }
-
-    .nav-card h3 {
-        margin: 0 0 6px;
-        font-size: 16px;
-    }
-
-    .nav-card p {
-        margin: 0;
-        font-size: 13px;
-        color: #888;
-    }
-</style>
+        #checking { color:#9aa094; font-family:'Chakra Petch'; font-size:0.9rem; }
+    </style>
 </head>
 <body>
 
-    <button id="logout">Déconnexion</button>
-
     <p id="checking">Vérification de la session…</p>
 
-    <div id="admin-content" style="display:none;">
-        <h1>Panel admin</h1>
+    <div class="admin-container" id="admin-content">
+        <h1><span>Tableau de bord</span></h1>
+        <div class="subhead">
+            <span>Gérer les données du site Tacti Shine QC</span>
+            <div class="links">
+                <a href="../index.html">← Retour au site</a>
+                <button type="button" id="logout">Déconnexion</button>
+            </div>
+        </div>
 
-        <div class="nav-cards">
+        <div class="stats-row" id="stats-row">
+            <div class="stat-box"><div class="num" id="stat-services">—</div><div class="label">Services</div></div>
+            <div class="stat-box"><div class="num" id="stat-reservations">—</div><div class="label">Réservations à venir</div></div>
+        </div>
 
-            <a href="/admin/services" class="nav-card">
+        <div class="dashboard-grid">
+
+            <a href="/admin/services" class="dash-card">
                 <h3>Services</h3>
                 <p>Créer, modifier, activer/désactiver les forfaits.</p>
             </a>
 
-            <a href="/admin/reservations" class="nav-card">
+
+            <a href="/admin/hours" class="dash-card">
+                <h3>Horaires</h3>
+                <p>Définir les heures d'ouverture et de fermeture par jour.</p>
+            </a>
+
+            <a href="/admin/reservations" class="dash-card">
                 <h3>Réservations</h3>
                 <p>Voir et annuler les réservations des clients.</p>
             </a>
 
-            <a href="/admin/blocked-times" class="nav-card">
+            <a href="/admin/blocked-times" class="dash-card">
                 <h3>Heures bloquées</h3>
                 <p>Bloquer une journée ou une plage d'heures précise.</p>
             </a>
@@ -115,6 +106,8 @@
 
             document.getElementById("checking").style.display = "none";
             document.getElementById("admin-content").style.display = "block";
+
+            loadStats();
         })();
 
 
@@ -126,6 +119,44 @@
 
                 window.location.href = "/admin/login.html";
             });
+
+
+        async function loadStats() {
+
+            try {
+
+                const servicesResponse = await fetch("/api/admin/services");
+
+                if (servicesResponse.ok) {
+
+                    const data = await servicesResponse.json();
+
+                    document.getElementById("stat-services").textContent =
+                        data.services.length;
+                }
+
+            } catch (error) {
+
+                console.error("Impossible de charger le nombre de services:", error);
+            }
+
+            try {
+
+                const bookingsResponse = await fetch("/api/admin/bookings?upcoming=true");
+
+                if (bookingsResponse.ok) {
+
+                    const data = await bookingsResponse.json();
+
+                    document.getElementById("stat-reservations").textContent =
+                        data.bookings.length;
+                }
+
+            } catch (error) {
+
+                console.error("Impossible de charger le nombre de réservations:", error);
+            }
+        }
 
     </script>
 

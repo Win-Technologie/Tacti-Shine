@@ -1,224 +1,375 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Réservations — Panel admin — Tacti Shine QC</title>
-<style>
-    body {
-        font-family: system-ui, sans-serif;
-        background: #0a0c09;
-        color: #fff;
-        margin: 0;
-        padding: 40px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservations · Admin · Tacti Shine QC</title>
+    <link rel="icon" type="image/jpg" href="../tacti-shine.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Chakra+Petch:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#070807; color:#e0e4dc; font-family:'Plus Jakarta Sans',sans-serif; padding:2rem; }
+        .container { max-width:1200px; margin:0 auto; }
+        .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1e221b; padding-bottom:1rem; margin-bottom:2rem; }
+        .header h1 { font-family:'Oswald'; font-weight:700; text-transform:uppercase; font-size:2rem; letter-spacing:.05em; }
+        .header h1 span { color:#7cb342; }
+        .header a { color:#7cb342; text-decoration:none; border:1px solid #2e3429; padding:0.3rem 1rem; border-radius:4px; font-size:0.8rem; transition:.2s; }
+        .header a:hover { background:#7cb342; color:#08130a; border-color:#7cb342; }
+        .back-link { color:#9aa094; text-decoration:none; font-size:0.85rem; display:inline-block; margin-bottom:1rem; }
+        .back-link:hover { color:#7cb342; }
+        .card { background:#121410; border:1px solid #22261d; border-radius:12px; padding:1.2rem 1.5rem 1.8rem; }
 
-    h1 { margin: 0 0 24px; }
+        .stats-row { display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+        .stat-box { background:#0c0f0b; border:1px solid #1e221b; border-radius:6px; padding:0.5rem 1.2rem; text-align:center; }
+        .stat-box .num { font-family:'Rajdhani'; font-weight:700; font-size:1.4rem; color:#7cb342; }
+        .stat-box .label { color:#7a8073; font-size:0.65rem; text-transform:uppercase; letter-spacing:.06em; }
 
-    #back-link {
-        color: #8fbf95;
-        text-decoration: none;
-        font-size: 14px;
-    }
+        .filters { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center; }
+        .filters input { background:#0a0c09; border:1px solid #262a21; border-radius:6px; padding:0.45rem 0.8rem; color:#e0e4dc; font-family:'Plus Jakarta Sans'; font-size:0.85rem; }
+        .filters input:focus { outline:none; border-color:#7cb342; }
+        .filters input[type="date"]::-webkit-calendar-picker-indicator { filter:brightness(0) invert(1); cursor:pointer; }
+        .filters label { font-size:0.8rem; color:#9aa094; display:flex; align-items:center; gap:0.4rem; }
+        .filters label input[type="checkbox"] { width:auto; }
 
-    .filters {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        margin: 20px 0;
-    }
+        .calendar-card { margin-bottom:1.5rem; }
+        .calendar-nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+        .calendar-nav button { background:transparent; border:1px solid #262a21; color:#d4d9d0; padding:0.3rem 0.8rem; border-radius:4px; cursor:pointer; transition:.2s; font-family:inherit; }
+        .calendar-nav button:hover { border-color:#7cb342; color:#7cb342; }
+        .calendar-nav .month-label { font-family:'Oswald'; font-weight:600; font-size:1.1rem; text-transform:uppercase; letter-spacing:.03em; }
+        .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:0.3rem; }
+        .calendar-day-header { text-align:center; font-family:'Chakra Petch'; font-size:0.65rem; text-transform:uppercase; color:#7a8073; padding:0.3rem 0; }
+        .calendar-day-cell { background:#0a0c09; border:1px solid #1e221b; border-radius:6px; min-height:64px; padding:0.3rem; cursor:pointer; transition:.2s; }
+        .calendar-day-cell:hover { border-color:#3d5e21; }
+        .calendar-day-cell.other-month { opacity:0.3; cursor:default; }
+        .calendar-day-cell.today { border-color:#7cb342; }
+        .calendar-day-cell .day-number { font-size:0.7rem; font-weight:600; color:#d4d9d0; }
+        .calendar-day-cell .res-count { display:inline-block; font-size:0.6rem; font-weight:600; background:#1d3a1d; color:#7cb342; padding:0.15rem 0.5rem; border-radius:10px; margin-top:0.3rem; }
+        @media(max-width:700px){ .calendar-day-cell { min-height:44px; } .calendar-day-cell .res-count { font-size:0.55rem; padding:0.1rem 0.4rem; } }
 
-    .filters input, .filters select {
-        padding: 8px 10px;
-        background: #111;
-        border: 1px solid #2a2e26;
-        border-radius: 6px;
-        color: #fff;
-        font-family: inherit;
-    }
+        table { width:100%; border-collapse:collapse; margin-top:0.5rem; }
+        th, td { text-align:left; padding:0.6rem 0.7rem; border-bottom:1px solid #1a1d18; font-size:0.85rem; }
+        th { color:#7a8073; font-weight:600; font-family:'Oswald'; text-transform:uppercase; font-size:0.7rem; letter-spacing:.04em; }
+        tr.cancelled { opacity:0.4; }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
+        .status-badge { display:inline-block; padding:0.1rem 0.6rem; border-radius:20px; font-size:0.65rem; font-weight:600; text-transform:uppercase; }
+        .status-confirmed { background:#1d3a1d; color:#7cb342; }
+        .status-cancelled { background:#3a1a1a; color:#d46a4a; }
 
-    th, td {
-        text-align: left;
-        padding: 10px 12px;
-        border-bottom: 1px solid #2a2e26;
-        font-size: 14px;
-    }
+        .btn { background:#7cb342; color:#08130a; border:none; padding:0.4rem 1.2rem; border-radius:4px; font-family:'Oswald'; font-weight:600; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; font-size:0.75rem; transition:.2s; }
+        .btn:hover { background:#9ccc65; }
+        .btn.danger { background:#b33; color:#fff; }
+        .btn.danger:hover { background:#d44; }
+        .btn.outline { background:transparent; border:1px solid #3d4239; color:#d4d9d0; }
+        .btn.outline:hover { border-color:#7cb342; color:#7cb342; }
 
-    th { color: #888; font-weight: 500; }
+        .toast { position:fixed; bottom:2rem; right:2rem; background:#121410; border:1px solid #7cb342; padding:0.8rem 1.6rem; border-radius:8px; color:#e0e4dc; font-family:'Chakra Petch'; font-size:0.9rem; box-shadow:0 8px 30px rgba(0,0,0,0.6); transform:translateY(120%); transition:transform .3s ease; z-index:999; }
+        .toast.show { transform:translateY(0); }
+        .toast strong { color:#7cb342; }
 
-    tr.cancelled { opacity: 0.4; }
+        #empty { color:#7a8073; margin-top:1.2rem; display:none; font-size:0.85rem; }
 
-    .status-badge {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-size: 12px;
-    }
-
-    .status-confirmed { background: #1c3d24; color: #7ecb8a; }
-    .status-cancelled { background: #3d1c1c; color: #cb7e7e; }
-
-    button {
-        font-family: inherit;
-        cursor: pointer;
-        border: none;
-        border-radius: 6px;
-        padding: 6px 12px;
-        font-size: 13px;
-        background: #7a2b2b;
-        color: #fff;
-    }
-
-    #empty {
-        color: #888;
-        margin-top: 20px;
-        display: none;
-    }
-</style>
+        @media(max-width:700px){ body { padding:1rem; } table { font-size:0.75rem; } th, td { padding:0.4rem; } }
+    </style>
 </head>
 <body>
+<div class="container">
+    <div class="header">
+        <h1><span>Réservations</span></h1>
+        <a href="../index.html">← Site</a>
+    </div>
+    <a href="index.html" class="back-link">← Retour au tableau de bord</a>
 
-    <a href="/admin" id="back-link">&larr; Retour au panel</a>
-    <h1>Réservations</h1>
-
-    <div class="filters">
-        <label>Date : <input type="date" id="filter-date"></label>
-        <button id="clear-filter" style="background:#1c211a;">Effacer le filtre</button>
-        <label style="margin-left:auto;">
-            <input type="checkbox" id="filter-upcoming" checked style="width:auto;">
-            À venir seulement
-        </label>
+    <div class="card calendar-card">
+        <div class="calendar-nav">
+            <button type="button" id="prev-month">← Précédent</button>
+            <span class="month-label" id="calendar-month-label"></span>
+            <button type="button" id="next-month">Suivant →</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>N°</th>
-                <th>Date</th>
-                <th>Heure</th>
-                <th>Client</th>
-                <th>Service</th>
-                <th>Prix</th>
-                <th>Statut</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="bookings-body"></tbody>
-    </table>
+    <div class="card">
 
-    <p id="empty">Aucune réservation trouvée.</p>
+        <div class="stats-row" id="stats-row">
+            <div class="stat-box"><div class="num" id="stat-total">0</div><div class="label">Affichées</div></div>
+            <div class="stat-box"><div class="num" id="stat-confirmed">0</div><div class="label">Confirmées</div></div>
+            <div class="stat-box"><div class="num" id="stat-cancelled">0</div><div class="label">Annulées</div></div>
+        </div>
 
+        <div class="filters">
+            <label>Date : <input type="date" id="filter-date"></label>
+            <button type="button" class="btn outline" id="clear-filter">Effacer le filtre</button>
+            <label style="margin-left:auto;">
+                <input type="checkbox" id="filter-upcoming" checked>
+                À venir seulement
+            </label>
+        </div>
 
-    <script>
-
-        function escapeHtml(str) {
-            const div = document.createElement("div");
-            div.textContent = str || "";
-            return div.innerHTML;
-        }
-
-
-        async function loadBookings() {
-
-            const date = document.getElementById("filter-date").value;
-            const upcoming = document.getElementById("filter-upcoming").checked;
-
-            let url = "/api/admin/bookings";
-
-            if (date) {
-                url += `?date=${date}`;
-            } else if (upcoming) {
-                url += `?upcoming=true`;
-            }
-
-            const response = await fetch(url);
-
-            if (response.status === 401) {
-                window.location.href = "/admin/login.html";
-                return;
-            }
-
-            const data = await response.json();
-            renderTable(data.bookings);
-        }
-
-
-        function renderTable(bookings) {
-
-            const body = document.getElementById("bookings-body");
-            const empty = document.getElementById("empty");
-
-            if (bookings.length === 0) {
-                body.innerHTML = "";
-                empty.style.display = "block";
-                return;
-            }
-
-            empty.style.display = "none";
-
-            body.innerHTML = bookings.map(b => `
-                <tr class="${b.status === 'cancelled' ? 'cancelled' : ''}">
-                    <td>${escapeHtml(b.bookingNumber)}</td>
-                    <td>${escapeHtml(b.date)}</td>
-                    <td>${escapeHtml(b.startTime)} → ${escapeHtml(b.endTime)}</td>
-                    <td>
-                        ${escapeHtml(b.customerName)}<br>
-                        <span style="color:#888;font-size:12px;">${escapeHtml(b.customerPhone)}</span>
-                    </td>
-                    <td>
-                        ${escapeHtml(b.serviceId)}
-                        ${b.vehicleSize ? " · " + escapeHtml(b.vehicleSize) : ""}
-                        ${b.cleaningType ? " · " + escapeHtml(b.cleaningType) : ""}
-                    </td>
-                    <td>${b.price.toFixed(2)} $</td>
-                    <td>
-                        <span class="status-badge status-${b.status}">
-                            ${b.status === "cancelled" ? "Annulée" : "Confirmée"}
-                        </span>
-                    </td>
-                    <td>
-                        ${b.status !== "cancelled"
-                            ? `<button onclick="cancelBooking('${b.id}')">Annuler</button>`
-                            : ""}
-                    </td>
+        <table>
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Date</th>
+                    <th>Heure</th>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Prix</th>
+                    <th>Statut</th>
+                    <th></th>
                 </tr>
-            `).join("");
+            </thead>
+            <tbody id="bookings-body"></tbody>
+        </table>
+
+        <p id="empty">Aucune réservation trouvée.</p>
+
+    </div>
+</div>
+
+<div id="toast" class="toast">✅ <strong>Enregistré</strong></div>
+
+
+<script>
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerHTML = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+
+    async function loadBookings() {
+
+        const date = document.getElementById('filter-date').value;
+        const upcoming = document.getElementById('filter-upcoming').checked;
+
+        let url = '/api/admin/bookings';
+
+        if (date) {
+            url += `?date=${date}`;
+        } else if (upcoming) {
+            url += `?upcoming=true`;
         }
 
+        const response = await fetch(url);
 
-        window.cancelBooking = async function (id) {
+        if (response.status === 401) {
+            window.location.href = '/admin/login.html';
+            return;
+        }
 
-            if (!confirm("Annuler cette réservation ?")) {
-                return;
-            }
-
-            await fetch("/api/admin/bookings", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, status: "cancelled" })
-            });
-
-            loadBookings();
-        };
+        const data = await response.json();
+        renderTable(data.bookings);
+    }
 
 
-        document.getElementById("filter-date").addEventListener("change", loadBookings);
-        document.getElementById("filter-upcoming").addEventListener("change", loadBookings);
+    function renderTable(bookings) {
 
-        document.getElementById("clear-filter").addEventListener("click", () => {
-            document.getElementById("filter-date").value = "";
-            loadBookings();
+        const body = document.getElementById('bookings-body');
+        const empty = document.getElementById('empty');
+
+        document.getElementById('stat-total').textContent = bookings.length;
+        document.getElementById('stat-confirmed').textContent =
+            bookings.filter(b => b.status !== 'cancelled').length;
+        document.getElementById('stat-cancelled').textContent =
+            bookings.filter(b => b.status === 'cancelled').length;
+
+        if (bookings.length === 0) {
+            body.innerHTML = '';
+            empty.style.display = 'block';
+            return;
+        }
+
+        empty.style.display = 'none';
+
+        body.innerHTML = bookings.map(b => `
+            <tr class="${b.status === 'cancelled' ? 'cancelled' : ''}">
+                <td>${escapeHtml(b.bookingNumber)}</td>
+                <td>${escapeHtml(String(b.date).slice(0, 10))}</td>
+                <td>${escapeHtml(b.startTime)} → ${escapeHtml(b.endTime)}</td>
+                <td>
+                    ${escapeHtml(b.customerName)}<br>
+                    <span style="color:#7a8073;font-size:0.75rem;">${escapeHtml(b.customerPhone)}</span>
+                </td>
+                <td>
+                    ${escapeHtml(b.serviceId)}
+                    ${b.vehicleSize ? ' · ' + escapeHtml(b.vehicleSize) : ''}
+                    ${b.cleaningType ? ' · ' + escapeHtml(b.cleaningType) : ''}
+                </td>
+                <td>${b.price.toFixed(2)} $</td>
+                <td>
+                    <span class="status-badge status-${b.status}">
+                        ${b.status === 'cancelled' ? 'Annulée' : 'Confirmée'}
+                    </span>
+                </td>
+                <td>
+                    ${b.status !== 'cancelled'
+                        ? `<button type="button" class="btn danger" onclick="cancelBooking('${b.id}')">Annuler</button>`
+                        : ''}
+                </td>
+            </tr>
+        `).join('');
+    }
+
+
+    window.cancelBooking = async function (id) {
+
+        if (!confirm('Annuler cette réservation ?')) {
+            return;
+        }
+
+        await fetch('/api/admin/bookings', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status: 'cancelled' })
         });
 
-
+        showToast('✅ <strong>Réservation annulée</strong>');
         loadBookings();
+        loadCalendarBookings();
+    };
 
-    </script>
+
+    document.getElementById('filter-date').addEventListener('change', loadBookings);
+    document.getElementById('filter-upcoming').addEventListener('change', loadBookings);
+
+    document.getElementById('clear-filter').addEventListener('click', () => {
+        document.getElementById('filter-date').value = '';
+        loadBookings();
+    });
+
+
+    /* =========================================
+       CALENDRIER (réservations à venir seulement)
+    ========================================= */
+
+    let calendarDate = new Date();
+    calendarDate.setDate(1);
+
+    let calendarBookings = [];
+
+    const monthNames = [
+        'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+    ];
+
+    const dayHeaders = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+
+
+    function formatDateForApi(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+
+    async function loadCalendarBookings() {
+
+        // Toujours "à venir seulement" — jamais les annulées,
+        // peu importe le filtre du tableau en dessous.
+        const response = await fetch('/api/admin/bookings?upcoming=true');
+
+        if (response.status === 401) {
+            window.location.href = '/admin/login.html';
+            return;
+        }
+
+        const data = await response.json();
+        calendarBookings = data.bookings;
+
+        renderCalendar();
+    }
+
+
+    function renderCalendar() {
+
+        document.getElementById('calendar-month-label').textContent =
+            `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
+
+        const grid = document.getElementById('calendar-grid');
+        grid.innerHTML = '';
+
+        dayHeaders.forEach(name => {
+            const header = document.createElement('div');
+            header.className = 'calendar-day-header';
+            header.textContent = name;
+            grid.appendChild(header);
+        });
+
+        const firstOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+        const startOffset = firstOfMonth.getDay(); // 0 = dimanche
+
+        const gridStart = new Date(firstOfMonth);
+        gridStart.setDate(gridStart.getDate() - startOffset);
+
+        const today = formatDateForApi(new Date());
+
+        for (let i = 0; i < 42; i++) {
+
+            const cellDate = new Date(gridStart);
+            cellDate.setDate(cellDate.getDate() + i);
+
+            const cellDateStr = formatDateForApi(cellDate);
+            const isOtherMonth = cellDate.getMonth() !== calendarDate.getMonth();
+
+            const dayBookings = calendarBookings.filter(b => String(b.date).slice(0, 10) === cellDateStr);
+
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day-cell';
+
+            if (isOtherMonth) cell.classList.add('other-month');
+            if (cellDateStr === today) cell.classList.add('today');
+            if (dayBookings.length > 0) cell.classList.add('has-bookings');
+
+            cell.innerHTML = `
+                <div class="day-number">${cellDate.getDate()}</div>
+                ${dayBookings.length > 0
+                    ? `<div class="res-count">${dayBookings.length} réservation${dayBookings.length > 1 ? 's' : ''}</div>`
+                    : ''}
+            `;
+
+            if (!isOtherMonth) {
+
+                cell.addEventListener('click', () => {
+
+                    document.getElementById('filter-date').value = cellDateStr;
+                    loadBookings();
+
+                    document.querySelector('.card:not(.calendar-card)')
+                        .scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+
+            grid.appendChild(cell);
+        }
+    }
+
+
+    document.getElementById('prev-month').addEventListener('click', () => {
+        calendarDate.setMonth(calendarDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+        calendarDate.setMonth(calendarDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+
+    loadBookings();
+    loadCalendarBookings();
+
+</script>
 
 </body>
 </html>
