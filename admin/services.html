@@ -47,7 +47,7 @@
         dialog::backdrop { background:rgba(0,0,0,0.7); }
         dialog h2 { font-family:'Oswald'; font-weight:600; text-transform:uppercase; font-size:1.1rem; margin-bottom:0.5rem; }
         label { display:block; font-size:0.7rem; text-transform:uppercase; color:#7a8073; margin:0.9rem 0 0.3rem; letter-spacing:.03em; }
-        input, textarea { width:100%; padding:0.5rem 0.6rem; background:#0a0c09; border:1px solid #262a21; border-radius:4px; color:#e0e4dc; font-family:'Plus Jakarta Sans'; font-size:0.85rem; box-sizing:border-box; }
+        input, textarea, select { width:100%; padding:0.5rem 0.6rem; background:#0a0c09; border:1px solid #262a21; border-radius:4px; color:#e0e4dc; font-family:'Plus Jakarta Sans'; font-size:0.85rem; box-sizing:border-box; }
         input:focus, textarea:focus { outline:none; border-color:#7cb342; }
         textarea { resize:vertical; min-height:50px; }
         .checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.9rem; }
@@ -120,6 +120,19 @@
 
         <label for="field-duration">Durée de base (heures, ex: 1.5)</label>
         <input type="number" id="field-duration" step="0.5" min="0.5" required>
+
+        <label for="field-features">Caractéristiques (une par ligne, affichées en puces sur le site)</label>
+        <textarea id="field-features" rows="4" placeholder="Décontamination chimique&#10;Retrait du calcium&#10;Remise à niveau complète"></textarea>
+
+        <label for="field-display-section">Où l'afficher sur le site public</label>
+        <select id="field-display-section">
+            <option value="">Nulle part (visible seulement dans la réservation)</option>
+            <option value="forfaits">Section "Forfaits détaillage"</option>
+            <option value="ceramique">Section "Revêtements céramiques"</option>
+        </select>
+
+        <label for="field-type">Type (regroupe les forfaits similaires — utile surtout pour la section céramique)</label>
+        <input type="text" id="field-type" placeholder="ex: entretien">
 
         <div class="checkbox-row">
             <input type="checkbox" id="field-is-flat">
@@ -295,6 +308,9 @@
         document.getElementById('field-name').value = service.name;
         document.getElementById('field-description').value = service.description || '';
         document.getElementById('field-duration').value = service.duration;
+        document.getElementById('field-features').value = (service.features || []).join('\n');
+        document.getElementById('field-display-section').value = service.displaySection || '';
+        document.getElementById('field-type').value = service.type || '';
 
         const isFlat = service.flatPrice !== null;
         isFlatCheckbox.checked = isFlat;
@@ -331,6 +347,12 @@
             name: document.getElementById('field-name').value.trim(),
             description: document.getElementById('field-description').value.trim(),
             duration: parseFloat(document.getElementById('field-duration').value),
+            features: document.getElementById('field-features').value
+                .split('\n')
+                .map(line => line.trim())
+                .filter(Boolean),
+            displaySection: document.getElementById('field-display-section').value || null,
+            type: document.getElementById('field-type').value.trim() || null,
             flatPrice: isFlat
                 ? parseFloat(document.getElementById('field-flat-price').value)
                 : null,

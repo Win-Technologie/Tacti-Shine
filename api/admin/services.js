@@ -90,7 +90,7 @@ module.exports = async function handler(req, res) {
 async function handleList(req, res) {
 
     const { rows: services } = await sql`
-        SELECT id, name, description, base_duration_minutes, flat_price_cents, active
+        SELECT id, name, description, base_duration_minutes, flat_price_cents, active, features, display_section, type
         FROM services
         ORDER BY name
     `;
@@ -109,6 +109,9 @@ async function handleList(req, res) {
             ? service.flat_price_cents / 100
             : null,
         active: service.active,
+        features: service.features || [],
+        displaySection: service.display_section,
+        type: service.type,
         pricing: pricingRows
             .filter(row => row.service_id === service.id)
             .map(row => ({
@@ -128,7 +131,7 @@ async function handleList(req, res) {
 
 async function handleCreate(req, res) {
 
-    const { id, name, description, duration, flatPrice, pricing } = req.body || {};
+    const { id, name, description, duration, flatPrice, pricing, features, displaySection, type } = req.body || {};
 
     if (!id || !name || !duration) {
         return res.status(400).json({ error: "id, name et duration sont requis" });
@@ -136,12 +139,13 @@ async function handleCreate(req, res) {
 
     const durationMinutes = Math.round(duration * 60);
     const flatPriceCents = flatPrice != null ? Math.round(flatPrice * 100) : null;
+    const featuresArray = Array.isArray(features) ? features.filter(Boolean) : [];
 
     try {
 
         await sql`
-            INSERT INTO services (id, name, description, base_duration_minutes, flat_price_cents, active)
-            VALUES (${id}, ${name}, ${description || ""}, ${durationMinutes}, ${flatPriceCents}, true)
+            INSERT INTO services (id, name, description, base_duration_minutes, flat_price_cents, active, features, display_section, type)
+            VALUES (${id}, ${name}, ${description || ""}, ${durationMinutes}, ${flatPriceCents}, true, ${featuresArray}, ${displaySection || null}, ${type || null})
         `;
 
         await insertPricingRows(id, pricing);
@@ -166,7 +170,7 @@ async function handleCreate(req, res) {
 
 async function handleUpdate(req, res) {
 
-    const { id, name, description, duration, flatPrice, pricing } = req.body || {};
+    const { id, name, description, duration, flatPrice, pricing, features, displaySection, type } = req.body || {};
 
     if (!id) {
         return res.status(400).json({ error: "id est requis" });
@@ -174,13 +178,17 @@ async function handleUpdate(req, res) {
 
     const durationMinutes = Math.round(duration * 60);
     const flatPriceCents = flatPrice != null ? Math.round(flatPrice * 100) : null;
+    const featuresArray = Array.isArray(features) ? features.filter(Boolean) : [];
 
     const { rowCount } = await sql`
         UPDATE services
         SET name = ${name},
             description = ${description || ""},
             base_duration_minutes = ${durationMinutes},
-            flat_price_cents = ${flatPriceCents}
+            flat_price_cents = ${flatPriceCents},
+            features = ${featuresArray},
+            display_section = ${displaySection || null},
+            type = ${type || null}
         WHERE id = ${id}
     `;
 

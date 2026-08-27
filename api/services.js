@@ -22,10 +22,10 @@ module.exports = async function handler(req, res) {
     try {
 
         const { rows: serviceRows } = await sql`
-            SELECT id, name, description, base_duration_minutes, flat_price_cents
+            SELECT id, name, description, base_duration_minutes, flat_price_cents, features, display_section, type
             FROM services
             WHERE active = true
-            ORDER BY name
+            ORDER BY base_duration_minutes
         `;
 
         const { rows: pricingRows } = await sql`
@@ -47,6 +47,9 @@ module.exports = async function handler(req, res) {
             flatPrice: service.flat_price_cents !== null
                 ? service.flat_price_cents / 100
                 : null,
+            features: service.features || [],
+            displaySection: service.display_section,
+            type: service.type,
             pricing: pricingRows
                 .filter(row => row.service_id === service.id)
                 .map(row => ({

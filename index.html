@@ -136,7 +136,8 @@ nav.main a.cta:hover{background:var(--green-l)}
 #ceramique{background:var(--ink2)}
 #ppe{background:#070807}
 
-.prix-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1180px;margin:0 auto}
+.prix-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:1180px;margin:0 auto}
+.prix-grid .prix-card{flex:1 1 340px;max-width:380px}
 .prix-card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:.25s}
 .prix-card:hover{border-color:var(--green-d);transform:translateY(-4px)}
 .prix-card.featured{border-color:var(--green);position:relative}
@@ -146,6 +147,7 @@ nav.main a.cta:hover{background:var(--green-l)}
 .prix-card .pk-name{font-family:'Oswald';font-weight:700;text-transform:uppercase;font-size:26px;line-height:1;margin-bottom:4px}
 .prix-card.featured .pk-name{color:var(--green)}
 .prix-card .pk-prix{font-family:'Rajdhani';font-weight:700;font-size:44px;line-height:1;color:#fff;margin-top:14px}
+.prix-card .pk-prix.range{font-size:27px}
 .prix-card .pk-prix span{font-size:18px;font-weight:500;color:var(--mut);margin-left:4px}
 .prix-card .pk-body{padding:22px 28px;flex:1}
 .prix-card .pk-body ul{list-style:none}
@@ -158,16 +160,11 @@ nav.main a.cta:hover{background:var(--green-l)}
 .prix-card.featured .pk-foot a{background:var(--green);color:#08130a;border-color:var(--green)}
 .prix-card.featured .pk-foot a:hover{background:var(--green-l)}
 
-.moto-card{max-width:1180px;margin:20px auto 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px 28px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
-.moto-card .moto-icon{font-size:34px;flex:none}
-.moto-card .moto-info{flex:1;min-width:220px}
-.moto-card .moto-info h4{font-family:'Oswald';font-weight:700;text-transform:uppercase;font-size:20px;margin-bottom:4px}
-.moto-card .moto-info p{color:var(--mut);font-size:15px}
-.moto-card .moto-prix{font-family:'Rajdhani';font-weight:700;font-size:40px;color:var(--green);white-space:nowrap}
-.moto-card .moto-prix span{font-size:16px;font-weight:500;color:var(--mut);margin-left:4px}
+
 
 /* CÉRAMIQUE GRID */
-.ceramique-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:1180px;margin:0 auto}
+.ceramique-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:1180px;margin:0 auto}
+.ceramique-grid .prix-card{flex:1 1 340px;max-width:380px}
 .cer-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:28px;transition:.25s}
 .cer-card:hover{border-color:var(--green-d)}
 .cer-card.cer-main{border-color:var(--green)}
@@ -213,13 +210,10 @@ nav.main a.cta:hover{background:var(--green-l)}
 .vitres-note strong{color:#e0e4dc;font-weight:600}
 
 @media(max-width:900px){
-  .prix-grid{grid-template-columns:1fr 1fr}
-  .ceramique-grid{grid-template-columns:1fr}
   .cer-extra{grid-template-columns:1fr 1fr}
   .ppe-ensembles{grid-template-columns:1fr}
 }
 @media(max-width:600px){
-  .prix-grid{grid-template-columns:1fr}
   .cer-extra{grid-template-columns:1fr}
   .ppe-table{grid-template-columns:repeat(2,1fr)}
   .ppe-table .ppe-th:nth-child(n+3),.ppe-table .ppe-td:nth-child(n+3){display:none}
@@ -1438,70 +1432,10 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
   <div class="sec-h">
     <div class="ey">Tarification · Voitures régulières</div>
     <h2>Forfaits <em>détaillage</em></h2>
-    <p>Trois niveaux de service pour berlines, coupés et compactes. Tous les forfaits incluent l'intérieur et l'extérieur.</p>
+    <p>Prix affichés du moins cher (extérieur ou intérieur seul) au plus cher (forfait complet), pour berlines, coupés et compactes.</p>
   </div>
-  <div class="prix-grid">
-    <div class="prix-card">
-      <div class="pk-head">
-        <div class="pk-rank">Niveau 01</div>
-        <div class="pk-name">Recrue</div>
-        <div class="pk-prix">199 $<span>+ tx</span></div>
-      </div>
-      <div class="pk-body">
-        <ul>
-          <li>Lavage extérieur complet</li>
-          <li>Nettoyage intérieur (aspiration, surfaces)</li>
-          <li>Vitres int/ext</li>
-          <li>Pneus et jantes nettoyés</li>
-          <li>Déodorant habitacle</li>
-        </ul>
-      </div>
-      <div class="pk-foot"><a href="#reserver">Réserver ce forfait</a></div>
-    </div>
-    <div class="prix-card featured">
-      <div class="pk-head">
-        <div class="pk-rank">Niveau 02</div>
-        <div class="pk-name">Sergent</div>
-        <div class="pk-prix">299 $<span>+ tx</span></div>
-      </div>
-      <div class="pk-body">
-        <ul>
-          <li>Tout du niveau Recrue</li>
-          <li>Décontamination argile</li>
-          <li>Shampoing moquettes &amp; sièges</li>
-          <li>Conditionnement cuir/plastiques</li>
-          <li>Protection peinture (sealant)</li>
-          <li>Cires jantes</li>
-        </ul>
-      </div>
-      <div class="pk-foot"><a href="#reserver">Réserver ce forfait</a></div>
-    </div>
-    <div class="prix-card">
-      <div class="pk-head">
-        <div class="pk-rank">Niveau 03</div>
-        <div class="pk-name">Major</div>
-        <div class="pk-prix">399 $<span>+ tx</span></div>
-      </div>
-      <div class="pk-body">
-        <ul>
-          <li>Tout du niveau Sergent</li>
-          <li>Polissage une étape (brillance)</li>
-          <li>Nettoyage moteur</li>
-          <li>Restauration plastiques extérieurs</li>
-          <li>Traitement anti-buée intérieur</li>
-          <li>Finition céramique légère</li>
-        </ul>
-      </div>
-      <div class="pk-foot"><a href="#reserver">Réserver ce forfait</a></div>
-    </div>
-  </div>
-  <div class="moto-card">
-    <div class="moto-icon">🏍️</div>
-    <div class="moto-info">
-      <h4>Forfait Moto</h4>
-      <p>Nettoyage et détaillage complet de votre moto — carrosserie, chrome, roues et mécanismes.</p>
-    </div>
-    <div class="moto-prix">149 $<span>+ tx</span></div>
+  <div class="prix-grid" id="forfaits-petits-grid">
+    <p style="color:#888;">Chargement des forfaits...</p>
   </div>
 </section>
 
@@ -1512,60 +1446,8 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
     <h2>Forfaits <em>véhicules lourds</em></h2>
     <p>Tarification adaptée aux grands gabarits — VUS pleine taille, camionnettes et véhicules commerciaux.</p>
   </div>
-  <div class="prix-grid">
-    <div class="prix-card">
-      <div class="pk-head">
-        <div class="pk-rank">Niveau 01</div>
-        <div class="pk-name">Recrue</div>
-        <div class="pk-prix">249 $<span>+ tx</span></div>
-      </div>
-      <div class="pk-body">
-        <ul>
-          <li>Lavage extérieur complet</li>
-          <li>Nettoyage intérieur (aspiration, surfaces)</li>
-          <li>Vitres int/ext</li>
-          <li>Pneus et jantes nettoyés</li>
-          <li>Déodorant habitacle</li>
-        </ul>
-      </div>
-      <div class="pk-foot"><a href="#reserver">Réserver ce forfait</a></div>
-    </div>
-    <div class="prix-card featured">
-      <div class="pk-head">
-        <div class="pk-rank">Niveau 02</div>
-        <div class="pk-name">Sergent</div>
-        <div class="pk-prix">399 $<span>+ tx</span></div>
-      </div>
-      <div class="pk-body">
-        <ul>
-          <li>Tout du niveau Recrue</li>
-          <li>Décontamination argile</li>
-          <li>Shampoing moquettes &amp; sièges</li>
-          <li>Conditionnement cuir/plastiques</li>
-          <li>Protection peinture (sealant)</li>
-          <li>Cires jantes</li>
-        </ul>
-      </div>
-      <div class="pk-foot"><a href="#reserver">Réserver ce forfait</a></div>
-    </div>
-    <div class="prix-card">
-      <div class="pk-head">
-        <div class="pk-rank">Niveau 03</div>
-        <div class="pk-name">Major</div>
-        <div class="pk-prix">499 $<span>+ tx</span></div>
-      </div>
-      <div class="pk-body">
-        <ul>
-          <li>Tout du niveau Sergent</li>
-          <li>Polissage une étape (brillance)</li>
-          <li>Nettoyage moteur</li>
-          <li>Restauration plastiques extérieurs</li>
-          <li>Traitement anti-buée intérieur</li>
-          <li>Finition céramique légère</li>
-        </ul>
-      </div>
-      <div class="pk-foot"><a href="#reserver">Réserver ce forfait</a></div>
-    </div>
+  <div class="prix-grid" id="forfaits-gros-grid">
+    <p style="color:#888;">Chargement des forfaits...</p>
   </div>
 </section>
 
@@ -1576,36 +1458,8 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
     <h2>Revêtements <em>céramiques</em></h2>
     <p>Protection longue durée à base de quartz — brillance extrême, hydrophobie et facilité d'entretien. Produits GYEON exclusivement.</p>
   </div>
-  <div class="ceramique-grid">
-    <div class="cer-card cer-main">
-      <div class="cer-label">Protection ultime</div>
-      <h4>GYEON Infinite Base</h4>
-      <div class="cer-prix"><span class="dès">à partir de</span>1 025 $<span> + tx</span></div>
-      <p class="cer-desc">Notre protection céramique professionnelle de pointe. Durabilité maximale, résistance aux rayures et brillance incomparable. Inclut préparation complète de la surface. Garantie studio certifié GYEON.</p>
-    </div>
-    <div class="cer-card">
-      <div class="cer-label">Couche supérieure</div>
-      <h4>GYEON Top Coat</h4>
-      <div class="cer-prix">450 $<span> + tx</span></div>
-      <p class="cer-desc">Couche additionnelle appliquée sur le Infinite Base ou tout revêtement existant. Renforce l'hydrophobie et ajoute une profondeur de brillance exceptionnelle.</p>
-    </div>
-  </div>
-  <div class="cer-extra">
-    <div class="cer-extra-card">
-      <h5>GYEON Mohs Evo</h5>
-      <div class="cer-prix">575 $<span style="font-size:14px;color:var(--mut);font-weight:400"> + tx</span></div>
-      <p>Revêtement dur haute résistance aux micro-rayures et aux produits chimiques. Idéal pour les véhicules à usage intensif.</p>
-    </div>
-    <div class="cer-extra-card">
-      <h5>GYEON View Evo</h5>
-      <div class="cer-prix">150 $<span style="font-size:14px;color:var(--mut);font-weight:400"> + tx</span></div>
-      <p>Revêtement céramique dédié au traitement des vitres — hydrophobie maximale, visibilité améliorée par temps de pluie.</p>
-    </div>
-    <div class="cer-extra-card">
-      <h5>Polissage</h5>
-      <div class="cer-prix">100 $<span style="font-size:14px;color:var(--mut);font-weight:400">/h + tx</span></div>
-      <p>Préparation de surface par polissage machine — correction des défauts de peinture avant application de céramique.</p>
-    </div>
+  <div class="ceramique-grid" id="ceramique-grid">
+    <p style="color:#888;">Chargement...</p>
   </div>
   <p class="cer-note">⚑ Tous les revêtements céramiques incluent une inspection de surface et la décontamination préalable.</p>
 </section>
@@ -2216,7 +2070,7 @@ if(matchMedia('(pointer:fine)').matches){
   document.addEventListener('mouseenter',()=>{cur.style.opacity=1;dot.style.opacity=1;});
 }
 </script>
-<script src="reservation.js"></script>
 <script src="booking.js"></script>
+<script src="forfaits-showcase.js"></script>
 </body>
 </html>
