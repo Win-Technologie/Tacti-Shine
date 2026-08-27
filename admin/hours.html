@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horaires · Admin · Tacti Shine QC</title>
+    <link rel="icon" type="image/jpg" href="../tacti-shine.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#070807; color:#e0e4dc; font-family:'Plus Jakarta Sans',sans-serif; padding:2rem; }
+        .container { max-width:800px; margin:0 auto; }
+        .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1e221b; padding-bottom:1rem; margin-bottom:2rem; }
+        .header h1 { font-family:'Oswald'; font-weight:700; text-transform:uppercase; font-size:2rem; letter-spacing:.05em; }
+        .header h1 span { color:#7cb342; }
+        .header a { color:#7cb342; text-decoration:none; border:1px solid #2e3429; padding:0.3rem 1rem; border-radius:4px; font-size:0.8rem; transition:.2s; }
+        .header a:hover { background:#7cb342; color:#08130a; border-color:#7cb342; }
+        .back-link { color:#9aa094; text-decoration:none; font-size:0.85rem; display:inline-block; margin-bottom:1rem; }
+        .back-link:hover { color:#7cb342; }
+        .card { background:#121410; border:1px solid #22261d; border-radius:12px; padding:1.5rem 2rem; }
+        .day-row { display:flex; align-items:center; gap:1rem; padding:0.6rem 0; border-bottom:1px solid #1a1d18; }
+        .day-row:last-child { border-bottom:none; }
+        .day-row .day-name { min-width:100px; font-weight:600; font-size:0.9rem; }
+        .day-row input[type="number"] { width:50px; background:#0a0c09; border:1px solid #262a21; border-radius:4px; padding:0.3rem 0.4rem; color:#e0e4dc; font-size:0.85rem; }
+        .day-row input:focus { outline:none; border-color:#7cb342; }
+        .day-row .sep { color:#6b7066; }
+        .day-row .status { font-size:0.75rem; color:#6b7066; margin-left:0.5rem; }
+        .day-row .closed-btn { background:transparent; border:1px solid #3d4239; color:#9aa094; padding:0.1rem 0.6rem; border-radius:3px; cursor:pointer; font-size:0.7rem; transition:.2s; }
+        .day-row .closed-btn:hover { border-color:#7cb342; color:#7cb342; }
+        .btn { background:#7cb342; color:#08130a; border:none; padding:0.6rem 2rem; border-radius:4px; font-family:'Oswald'; font-weight:600; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; font-size:0.85rem; transition:.2s; margin-top:1rem; }
+        .btn:hover { background:#9ccc65; }
+        .btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .toast { position:fixed; bottom:2rem; right:2rem; background:#121410; border:1px solid #7cb342; padding:0.8rem 1.6rem; border-radius:8px; color:#e0e4dc; font-family:'Chakra Petch'; font-size:0.9rem; box-shadow:0 8px 30px rgba(0,0,0,0.6); transform:translateY(120%); transition:transform .3s ease; z-index:999; }
+        .toast.show { transform:translateY(0); }
+        .toast.error { border-color:#b33; }
+        .toast strong { color:#7cb342; }
+        .toast.error strong { color:#d46a4a; }
+        #loading { color:#7a8073; font-size:0.85rem; }
+        @media(max-width:600px){ body { padding:1rem; } .day-row { flex-wrap:wrap; gap:0.3rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><span>Horaires d'ouverture</span></h1>
+        <a href="../index.html">← Site</a>
+    </div>
+    <a href="index.html" class="back-link">← Retour au tableau de bord</a>
+
+    <div class="card">
+        <h3 style="font-family:'Oswald';font-weight:600;text-transform:uppercase;font-size:1.1rem;margin-bottom:1rem;">Horaire quotidien</h3>
+        <p style="color:#7a8073;font-size:0.85rem;margin-bottom:1rem;">Définissez les heures d'ouverture et de fermeture pour chaque jour de la semaine.</p>
+        <p id="loading">Chargement...</p>
+        <div id="hours-container"></div>
+        <button class="btn" id="save-btn" disabled>Enregistrer les horaires</button>
+    </div>
+</div>
+
+<div id="toast" class="toast">✅ <strong>Enregistré</strong></div>
+
+<script>
+
+    // hours[i] = null (fermé) ou { start, end } en heures 0-23
+    let hours = { 0:null, 1:null, 2:null, 3:null, 4:null, 5:null, 6:null };
+
+    const dayNames = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+
+
+    function showToast(msg, isError) {
+        const t = document.getElementById('toast');
+        t.innerHTML = msg;
+        t.classList.toggle('error', !!isError);
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+
+    async function loadHours() {
+
+        try {
+
+            const response = await fetch('/api/admin/business-hours');
+
+            if (response.status === 401) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error('Réponse non-OK');
+            }
+
+            const data = await response.json();
+
+            data.days.forEach(day => {
+                hours[day.dayOfWeek] = day.isOpen
+                    ? { start: day.startHour, end: day.endHour }
+                    : null;
+            });
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('save-btn').disabled = false;
+
+            render();
+
+        } catch (error) {
+
+            console.error('Impossible de charger les horaires:', error);
+
+            document.getElementById('loading').textContent =
+                'Impossible de charger les horaires. Rafraîchis la page.';
+        }
+    }
+
+
+    function render() {
+
+        const container = document.getElementById('hours-container');
+        let html = '';
+
+        dayNames.forEach((name, i) => {
+
+            const h = hours[i];
+            const isOpen = h !== null;
+
+            html += `
+                <div class="day-row">
+                    <span class="day-name">${name}</span>
+                    <input type="number" min="0" max="23" value="${isOpen ? h.start : ''}" data-start="${i}" placeholder="-" ${!isOpen ? 'disabled' : ''}>
+                    <span class="sep">—</span>
+                    <input type="number" min="0" max="24" value="${isOpen ? h.end : ''}" data-end="${i}" placeholder="-" ${!isOpen ? 'disabled' : ''}>
+                    <span class="status">${isOpen ? 'ouvert' : 'fermé'}</span>
+                    <button type="button" class="closed-btn" data-toggle="${i}">${isOpen ? 'Fermer' : 'Ouvrir'}</button>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+
+        container.querySelectorAll('[data-toggle]').forEach(btn => {
+
+            btn.addEventListener('click', function () {
+
+                const idx = parseInt(this.dataset.toggle);
+
+                hours[idx] = hours[idx] === null
+                    ? { start: 9, end: 17 }
+                    : null;
+
+                render();
+            });
+        });
+    }
+
+
+    document.getElementById('save-btn').addEventListener('click', async function () {
+
+        // Récupère les valeurs actuellement affichées dans les champs
+        // avant d'envoyer — comme dans la maquette d'origine.
+        document.querySelectorAll('[data-start]').forEach(el => {
+
+            const idx = parseInt(el.dataset.start);
+
+            if (hours[idx] === null) {
+                return; // jour fermé, rien à lire
+            }
+
+            const endEl = document.querySelector(`[data-end="${idx}"]`);
+            const s = parseInt(el.value);
+            const e = parseInt(endEl ? endEl.value : '');
+
+            if (!isNaN(s) && !isNaN(e) && s >= 0 && e <= 24 && s < e) {
+                hours[idx] = { start: s, end: e };
+            }
+        });
+
+        const payload = {
+            days: dayNames.map((_, i) => ({
+                dayOfWeek: i,
+                isOpen: hours[i] !== null,
+                startHour: hours[i] ? hours[i].start : null,
+                endHour: hours[i] ? hours[i].end : null
+            }))
+        };
+
+        const saveBtn = this;
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Enregistrement...';
+
+        try {
+
+            const response = await fetch('/api/admin/business-hours', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Erreur lors de l\'enregistrement');
+            }
+
+            render();
+
+            showToast('✅ <strong>Horaires enregistrés</strong>');
+
+        } catch (error) {
+
+            console.error(error);
+
+            showToast('⚠️ <strong>' + (error.message || 'Erreur') + '</strong>', true);
+
+        } finally {
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Enregistrer les horaires';
+        }
+    });
+
+
+    loadHours();
+
+</script>
+</body>
+</html>

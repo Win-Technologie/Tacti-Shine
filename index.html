@@ -136,7 +136,12 @@ nav.main a.cta:hover{background:var(--green-l)}
 #ceramique{background:var(--ink2)}
 #ppe{background:#070807}
 
+<<<<<<< HEAD
 .prix-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1180px;margin:0 auto}
+=======
+.prix-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:1180px;margin:0 auto}
+.prix-grid .prix-card{flex:1 1 340px;max-width:380px}
+>>>>>>> calendrier-dynamic
 .prix-card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:.25s}
 .prix-card:hover{border-color:var(--green-d);transform:translateY(-4px)}
 .prix-card.featured{border-color:var(--green);position:relative}
@@ -146,6 +151,10 @@ nav.main a.cta:hover{background:var(--green-l)}
 .prix-card .pk-name{font-family:'Oswald';font-weight:700;text-transform:uppercase;font-size:26px;line-height:1;margin-bottom:4px}
 .prix-card.featured .pk-name{color:var(--green)}
 .prix-card .pk-prix{font-family:'Rajdhani';font-weight:700;font-size:44px;line-height:1;color:#fff;margin-top:14px}
+<<<<<<< HEAD
+=======
+.prix-card .pk-prix.range{font-size:27px}
+>>>>>>> calendrier-dynamic
 .prix-card .pk-prix span{font-size:18px;font-weight:500;color:var(--mut);margin-left:4px}
 .prix-card .pk-body{padding:22px 28px;flex:1}
 .prix-card .pk-body ul{list-style:none}
@@ -158,6 +167,7 @@ nav.main a.cta:hover{background:var(--green-l)}
 .prix-card.featured .pk-foot a{background:var(--green);color:#08130a;border-color:var(--green)}
 .prix-card.featured .pk-foot a:hover{background:var(--green-l)}
 
+<<<<<<< HEAD
 .moto-card{max-width:1180px;margin:20px auto 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px 28px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
 .moto-card .moto-icon{font-size:34px;flex:none}
 .moto-card .moto-info{flex:1;min-width:220px}
@@ -168,6 +178,13 @@ nav.main a.cta:hover{background:var(--green-l)}
 
 /* CÉRAMIQUE GRID */
 .ceramique-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:1180px;margin:0 auto}
+=======
+
+
+/* CÉRAMIQUE GRID */
+.ceramique-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:1180px;margin:0 auto}
+.ceramique-grid .prix-card{flex:1 1 340px;max-width:380px}
+>>>>>>> calendrier-dynamic
 .cer-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:28px;transition:.25s}
 .cer-card:hover{border-color:var(--green-d)}
 .cer-card.cer-main{border-color:var(--green)}
@@ -213,13 +230,19 @@ nav.main a.cta:hover{background:var(--green-l)}
 .vitres-note strong{color:#e0e4dc;font-weight:600}
 
 @media(max-width:900px){
+<<<<<<< HEAD
   .prix-grid{grid-template-columns:1fr 1fr}
   .ceramique-grid{grid-template-columns:1fr}
+=======
+>>>>>>> calendrier-dynamic
   .cer-extra{grid-template-columns:1fr 1fr}
   .ppe-ensembles{grid-template-columns:1fr}
 }
 @media(max-width:600px){
+<<<<<<< HEAD
   .prix-grid{grid-template-columns:1fr}
+=======
+>>>>>>> calendrier-dynamic
   .cer-extra{grid-template-columns:1fr}
   .ppe-table{grid-template-columns:repeat(2,1fr)}
   .ppe-table .ppe-th:nth-child(n+3),.ppe-table .ppe-td:nth-child(n+3){display:none}
@@ -374,6 +397,1025 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
     width: min(280px, 70vw);
   }
 }
+<<<<<<< HEAD
+=======
+#reserver {
+    background: var(--ink2);
+}
+
+/* Main booking section */
+.booking-section {
+    background: var(--ink2);
+    padding: 88px 5vw;
+    min-height: 700px;
+}
+
+/* Main container */
+.booking-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
+
+.booking-progress {
+    display: flex;
+    align-items: center;
+    padding: 28px 40px;
+    background: #0d100c;
+    border-bottom: 1px solid var(--line);
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #5f655b;
+    transition: .25s;
+}
+
+.progress-step span {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid #353a31;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Chakra Petch';
+    font-weight: 700;
+    font-size: 13px;
+
+    transition: .25s;
+}
+
+.progress-step small {
+    font-family: 'Chakra Petch';
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.progress-step.active {
+    color: var(--green);
+}
+
+.progress-step.active span {
+    background: var(--green);
+    border-color: var(--green);
+    color: #08130a;
+}
+
+.progress-step.completed {
+    color: var(--green-l);
+}
+
+.progress-step.completed span {
+    background: var(--green-deep);
+    border-color: var(--green);
+    color: var(--green-l);
+}
+
+.progress-line {
+    flex: 1;
+    height: 1px;
+    background: #292e25;
+    margin: 0 15px;
+}
+
+/* =========================================================
+   BOOKING STEPS
+   ========================================================= */
+
+.booking-step {
+    display: none;
+    padding: clamp(28px, 5vw, 52px);
+}
+
+.booking-step.active {
+    display: block;
+}
+
+/* Header */
+
+.booking-header {
+    margin-bottom: 35px;
+}
+
+.booking-eyebrow {
+    display: inline-block;
+
+    font-family: 'Chakra Petch';
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+
+    color: var(--green);
+
+    margin-bottom: 10px;
+}
+
+.booking-header h2 {
+    font-family: 'Oswald';
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 42px);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 12px;
+}
+
+.booking-header p {
+    color: var(--mut);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   SERVICES
+   ========================================================= */
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+/* =========================================================
+   VEHICLE OPTION GROUPS
+   (grouped by vehicle size, each with its own title)
+   ========================================================= */
+
+.vehicle-option-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    margin-bottom: 30px;
+}
+
+.vehicle-option-group {
+    background: #0a0c09;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.vehicle-option-group-title {
+    font-family: 'Oswald';
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--green-l);
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+}
+
+.vehicle-option-group-title small {
+    font-family: 'Chakra Petch';
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--mut);
+}
+
+.vehicle-option-group .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 0;
+}
+
+@media(max-width:720px) {
+    .vehicle-option-group .services-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.service-card {
+    position: relative;
+
+    background: #0c0f0b;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    padding: 24px;
+
+    cursor: pointer;
+
+    transition:
+        border-color .2s,
+        background .2s,
+        transform .2s,
+        box-shadow .2s;
+}
+
+.service-card:hover {
+    background: #10140e;
+    border-color: var(--green-d);
+    transform: translateY(-2px);
+}
+
+.service-card.selected {
+    border-color: var(--green);
+    background: rgba(124, 179, 66, .08);
+    box-shadow: 0 0 0 1px var(--green);
+}
+
+.service-card h3 {
+    font-family: 'Oswald';
+    font-weight: 700;
+    font-size: 23px;
+    text-transform: uppercase;
+
+    margin-bottom: 8px;
+}
+
+.service-card p {
+    color: var(--mut);
+    font-size: 14px;
+    line-height: 1.55;
+
+    margin-bottom: 18px;
+}
+
+.service-duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: var(--green-l);
+
+    font-family: 'Chakra Petch';
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.service-price {
+    margin-top: 15px;
+
+    font-family: 'Rajdhani';
+    font-size: 28px;
+    font-weight: 700;
+
+    color: #fff;
+}
+
+.service-check {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+
+    width: 25px;
+    height: 25px;
+
+    border-radius: 50%;
+
+    border: 1px solid #3b4137;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: transparent;
+
+    transition: .2s;
+}
+
+.service-card.selected .service-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: #08130a;
+}
+
+/* =========================================================
+   SELECTED SERVICE
+   ========================================================= */
+
+.selected-service-summary {
+    background: #0c0f0b;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--green);
+    border-radius: 8px;
+
+    padding: 16px 20px;
+
+    margin-bottom: 25px;
+
+    color: #dce2d7;
+}
+
+/* =========================================================
+   ADD-ON OPTION (e.g. Polissage une étape)
+   ========================================================= */
+
+.addon-option {
+    background: #0c0f0b;
+    border: 1px dashed var(--green-d);
+    border-radius: 10px;
+
+    padding: 18px 20px;
+
+    margin-bottom: 30px;
+}
+
+.addon-option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+}
+
+.addon-option-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--green);
+    flex: none;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.addon-option-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.addon-option-text strong {
+    font-family: 'Oswald';
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #fff;
+}
+
+.addon-option-text span {
+    color: var(--mut);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.addon-option-price {
+    flex: none;
+    font-family: 'Rajdhani';
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green-l);
+    white-space: nowrap;
+}
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+
+.calendar-wrapper {
+    background: #0c0f0b;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    padding: 22px;
+
+    margin-bottom: 25px;
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+}
+
+.calendar-header h3 {
+    font-family: 'Oswald';
+    font-size: 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.calendar-nav {
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid var(--line);
+    border-radius: 6px;
+
+    background: #11150f;
+    color: #fff;
+
+    font-size: 25px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.calendar-nav:hover {
+    background: var(--green);
+    border-color: var(--green);
+    color: #08130a;
+}
+
+/* Weekdays */
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+
+    margin-bottom: 7px;
+}
+
+.calendar-weekdays span {
+    text-align: center;
+
+    font-family: 'Chakra Petch';
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+
+    color: var(--mut);
+
+    padding: 8px 0;
+}
+
+/* Days */
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    min-height: 48px;
+
+    border: 1px solid transparent;
+    border-radius: 6px;
+
+    background: transparent;
+    color: #dfe4dc;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Chakra Petch';
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.calendar-day:hover:not(.disabled):not(.empty) {
+    border-color: var(--green-d);
+    background: rgba(124, 179, 66, .08);
+}
+
+.calendar-day.today {
+    color: var(--green-l);
+    border-color: #465238;
+}
+
+.calendar-day.selected {
+    background: var(--green);
+    border-color: var(--green);
+    color: #08130a;
+    font-weight: 700;
+}
+
+.calendar-day.disabled {
+    color: #3c4239;
+    cursor: not-allowed;
+    opacity: .5;
+}
+
+.calendar-day.empty {
+    cursor: default;
+}
+
+/* =========================================================
+   TIME SELECTION
+   ========================================================= */
+
+.time-selection {
+    margin-top: 25px;
+}
+
+.time-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.time-header h3 {
+    font-family: 'Oswald';
+    font-size: 21px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+#selected-date-label {
+    color: var(--green-l);
+
+    font-family: 'Chakra Petch';
+    font-size: 12px;
+}
+
+.loading-times {
+    color: var(--mut);
+
+    background: #0c0f0b;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+
+    padding: 18px;
+    text-align: center;
+
+    font-size: 14px;
+}
+
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 9px;
+}
+
+.time-slot {
+    background: #0c0f0b;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+
+    padding: 13px 8px;
+
+    text-align: center;
+
+    color: #dfe4dc;
+
+    font-family: 'Chakra Petch';
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.time-slot:hover:not(.disabled) {
+    border-color: var(--green-d);
+    color: var(--green-l);
+}
+
+.time-slot.selected {
+    background: var(--green);
+    border-color: var(--green);
+    color: #08130a;
+}
+
+.time-slot.disabled {
+    color: #42483f;
+    background: #090b08;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+/* =========================================================
+   SELECTED TIME
+   ========================================================= */
+
+.selected-time {
+    margin-top: 18px;
+
+    color: var(--green-l);
+
+    font-family: 'Chakra Petch';
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+#customer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-group label {
+    font-family: 'Chakra Petch';
+    font-weight: 600;
+
+    font-size: 11px;
+    letter-spacing: .1em;
+
+    text-transform: uppercase;
+
+    color: var(--mut);
+}
+
+.form-group label span {
+    text-transform: none;
+    letter-spacing: 0;
+    color: #686f64;
+    font-weight: 400;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+
+    background: #0a0c09;
+
+    border: 1px solid #262a21;
+    border-radius: 8px;
+
+    padding: 14px 15px;
+
+    color: #fff;
+
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+
+    transition: .2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px rgba(124, 179, 66, .15);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #535a50;
+}
+
+/* =========================================================
+   VEHICLE
+   ========================================================= */
+
+.vehicle-section {
+    background: #0c0f0b;
+
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    padding: 22px;
+}
+
+.vehicle-section h3 {
+    font-family: 'Oswald';
+    font-size: 20px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    margin-bottom: 18px;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.booking-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 30px;
+}
+
+.booking-btn {
+    border: none;
+    border-radius: 4px;
+
+    padding: 14px 28px;
+
+    font-family: 'Oswald';
+    font-weight: 600;
+
+    font-size: 15px;
+
+    text-transform: uppercase;
+    letter-spacing: .06em;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.booking-btn.primary {
+    background: var(--green);
+    color: #08130a;
+}
+
+.booking-btn.primary:hover:not(:disabled) {
+    background: var(--green-l);
+}
+
+.booking-btn.primary:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.booking-btn.secondary {
+    background: transparent;
+    color: #d4d9d0;
+
+    border: 1px solid #41463e;
+}
+
+.booking-btn.secondary:hover {
+    border-color: var(--green);
+    color: var(--green-l);
+}
+
+/* =========================================================
+   CONFIRMATION SUMMARY
+   ========================================================= */
+
+.booking-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 1px;
+
+    background: var(--line);
+
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    margin-bottom: 25px;
+}
+
+.summary-item {
+    background: #0c0f0b;
+    padding: 18px 20px;
+}
+
+.summary-item small {
+    display: block;
+
+    color: var(--mut);
+
+    font-family: 'Chakra Petch';
+    font-size: 10px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: .1em;
+
+    margin-bottom: 5px;
+}
+
+.summary-item strong {
+    color: #fff;
+
+    font-size: 15px;
+}
+
+/* =========================================================
+   HOLD NOTICE
+   ========================================================= */
+
+.hold-notice {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    background: rgba(124, 179, 66, .08);
+
+    border: 1px solid var(--green-d);
+    border-radius: 9px;
+
+    padding: 16px 18px;
+
+    margin-bottom: 25px;
+}
+
+.hold-icon {
+    font-size: 25px;
+    flex: none;
+}
+
+.hold-notice strong {
+    color: var(--green-l);
+}
+
+.hold-notice p {
+    color: var(--mut);
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+#hold-countdown {
+    font-family: 'Rajdhani';
+    font-size: 20px;
+    color: #fff;
+}
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.booking-success {
+    text-align: center;
+
+    padding: 25px 0 15px;
+}
+
+.success-icon {
+    width: 70px;
+    height: 70px;
+
+    margin: 0 auto 25px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    color: #08130a;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.booking-success h2 {
+    font-family: 'Oswald';
+    font-size: clamp(28px, 4vw, 42px);
+
+    text-transform: uppercase;
+
+    margin-bottom: 12px;
+}
+
+.booking-success > p {
+    color: var(--mut);
+    margin-bottom: 25px;
+}
+
+#confirmation-details {
+    max-width: 600px;
+
+    margin: 0 auto 28px;
+
+    background: #0c0f0b;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    padding: 20px;
+
+    text-align: left;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .booking-progress {
+        padding: 20px;
+    }
+
+    .progress-step small {
+        display: none;
+    }
+
+    .progress-line {
+        margin: 0 8px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .time-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 520px) {
+
+    .booking-section {
+        padding: 60px 4vw;
+    }
+
+    .booking-container {
+        border-radius: 10px;
+    }
+
+    .booking-step {
+        padding: 25px 18px;
+    }
+
+    .booking-progress {
+        padding: 16px 12px;
+    }
+
+    .progress-step span {
+        width: 29px;
+        height: 29px;
+        font-size: 11px;
+    }
+
+    .progress-line {
+        margin: 0 5px;
+    }
+
+    .calendar-wrapper {
+        padding: 14px;
+    }
+
+    .calendar-day {
+        min-height: 40px;
+        font-size: 12px;
+    }
+
+    .calendar-weekdays span {
+        font-size: 8px;
+    }
+
+    .time-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .booking-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .booking-btn {
+        width: 100%;
+    }
+
+    .booking-summary {
+        grid-template-columns: 1fr;
+    }
+
+}
+>>>>>>> calendrier-dynamic
 </style>
 </head>
 <body>
@@ -422,6 +1464,7 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
   <div class="sec-h">
     <div class="ey">Tarification · Voitures régulières</div>
     <h2>Forfaits <em>détaillage</em></h2>
+<<<<<<< HEAD
     <p>Trois niveaux de service pour berlines, coupés et compactes. Tous les forfaits incluent l'intérieur et l'extérieur.</p>
   </div>
   <div class="prix-grid">
@@ -486,6 +1529,12 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
       <p>Nettoyage et détaillage complet de votre moto — carrosserie, chrome, roues et mécanismes.</p>
     </div>
     <div class="moto-prix">149 $<span>+ tx</span></div>
+=======
+    <p>Prix affichés du moins cher (extérieur ou intérieur seul) au plus cher (forfait complet), pour berlines, coupés et compactes.</p>
+  </div>
+  <div class="prix-grid" id="forfaits-petits-grid">
+    <p style="color:#888;">Chargement des forfaits...</p>
+>>>>>>> calendrier-dynamic
   </div>
 </section>
 
@@ -496,6 +1545,7 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
     <h2>Forfaits <em>véhicules lourds</em></h2>
     <p>Tarification adaptée aux grands gabarits — VUS pleine taille, camionnettes et véhicules commerciaux.</p>
   </div>
+<<<<<<< HEAD
   <div class="prix-grid">
     <div class="prix-card">
       <div class="pk-head">
@@ -550,6 +1600,10 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
       </div>
       <div class="pk-foot"><a href="#reserver">Réserver ce forfait</a></div>
     </div>
+=======
+  <div class="prix-grid" id="forfaits-gros-grid">
+    <p style="color:#888;">Chargement des forfaits...</p>
+>>>>>>> calendrier-dynamic
   </div>
 </section>
 
@@ -560,6 +1614,7 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
     <h2>Revêtements <em>céramiques</em></h2>
     <p>Protection longue durée à base de quartz — brillance extrême, hydrophobie et facilité d'entretien. Produits GYEON exclusivement.</p>
   </div>
+<<<<<<< HEAD
   <div class="ceramique-grid">
     <div class="cer-card cer-main">
       <div class="cer-label">Protection ultime</div>
@@ -590,6 +1645,10 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
       <div class="cer-prix">100 $<span style="font-size:14px;color:var(--mut);font-weight:400">/h + tx</span></div>
       <p>Préparation de surface par polissage machine — correction des défauts de peinture avant application de céramique.</p>
     </div>
+=======
+  <div class="ceramique-grid" id="ceramique-grid">
+    <p style="color:#888;">Chargement...</p>
+>>>>>>> calendrier-dynamic
   </div>
   <p class="cer-note">⚑ Tous les revêtements céramiques incluent une inspection de surface et la décontamination préalable.</p>
 </section>
@@ -666,6 +1725,7 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
 
 <!-- RÉSERVATION -->
 <section id="reserver" class="sec">
+<<<<<<< HEAD
   <div class="sec-h"><div class="ey">Prends rendez-vous</div><h2>Réserver une <em>mission</em></h2><p>Choisis ton service, ta date et ton heure. On confirme rapidement par téléphone ou courriel.</p></div>
   <div class="book">
     <form id="bookForm">
@@ -719,6 +1779,415 @@ footer.site{background:#060706;padding:64px 5vw 36px;border-top:1px solid #16181
       <div class="submit"><button type="submit" class="btn-g">Envoyer la demande</button><small>Ou appelle directement au (418) 572-4011</small></div>
     </form>
   </div>
+=======
+  <div class="booking-container" id="booking-container">
+
+        <!-- Progress -->
+        <div class="booking-progress">
+            <div class="progress-step active" data-step="1">
+                <span>1</span>
+                <small>Service</small>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step" data-step="2">
+                <span>2</span>
+                <small>Véhicule & type</small>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step" data-step="3">
+                <span>3</span>
+                <small>Date & heure</small>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step" data-step="4">
+                <span>4</span>
+                <small>Informations</small>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step" data-step="5">
+                <span>5</span>
+                <small>Confirmation</small>
+            </div>
+        </div>
+
+
+        <!-- STEP 1 -->
+        <div class="booking-step active" id="step-1">
+
+            <div class="booking-header">
+                <span class="booking-eyebrow">RÉSERVATION</span>
+                <h2>Choisissez votre service</h2>
+                <p>Sélectionnez le service dont vous avez besoin.</p>
+            </div>
+
+            <div class="services-grid" id="services-list"></div>
+
+            <div class="booking-actions">
+                <button
+                    type="button"
+                    class="booking-btn primary"
+                    id="service-next"
+                    disabled>
+                    Continuer
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- STEP 2 -->
+        <div class="booking-step" id="step-2">
+
+            <div class="booking-header">
+                <span class="booking-eyebrow">RÉSERVATION</span>
+                <h2>Taille du véhicule et type de nettoyage</h2>
+                <p>Choisissez la combinaison qui correspond à votre véhicule — le prix varie selon l'option.</p>
+            </div>
+
+            <div class="selected-service-summary" id="selected-service-summary-2"></div>
+
+            <div class="vehicle-option-groups" id="vehicle-option-list"></div>
+
+            <div class="addon-option" id="polissage-addon" style="display:none;">
+                <label class="addon-option-label" for="polissage-checkbox">
+                    <input type="checkbox" id="polissage-checkbox">
+                    <span class="addon-option-text">
+                        <strong id="polissage-addon-name"></strong>
+                        <span id="polissage-addon-description"></span>
+                    </span>
+                    <span class="addon-option-price" id="polissage-addon-price"></span>
+                </label>
+            </div>
+
+            <div class="booking-actions">
+                <button
+                    type="button"
+                    class="booking-btn secondary"
+                    data-back="1">
+                    Retour
+                </button>
+
+                <button
+                    type="button"
+                    class="booking-btn primary"
+                    id="vehicle-option-next"
+                    disabled>
+                    Continuer
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- STEP 3 -->
+        <div class="booking-step" id="step-3">
+
+            <div class="booking-header">
+                <span class="booking-eyebrow">RÉSERVATION</span>
+                <h2>Choisissez une date et une heure</h2>
+                <p>
+                    Sélectionnez une date pour voir les heures disponibles.
+                </p>
+            </div>
+
+            <div class="selected-service-summary" id="selected-service-summary"></div>
+
+            <div class="calendar-wrapper">
+
+                <div class="calendar-header">
+                    <button type="button" id="previous-month" class="calendar-nav">
+                        ‹
+                    </button>
+
+                    <h3 id="calendar-month"></h3>
+
+                    <button type="button" id="next-month" class="calendar-nav">
+                        ›
+                    </button>
+                </div>
+
+                <div class="calendar-weekdays">
+                    <span>Lun</span>
+                    <span>Mar</span>
+                    <span>Mer</span>
+                    <span>Jeu</span>
+                    <span>Ven</span>
+                    <span>Sam</span>
+                    <span>Dim</span>
+                </div>
+
+                <div class="calendar-days" id="calendar-days"></div>
+
+            </div>
+
+
+            <div class="time-selection" id="time-selection">
+
+                <div class="time-header">
+                    <h3>Heures disponibles</h3>
+                    <span id="selected-date-label"></span>
+                </div>
+
+                <div class="loading-times" id="loading-times">
+                    Sélectionnez une date.
+                </div>
+
+                <div class="time-grid" id="time-grid"></div>
+
+            </div>
+
+
+            <div class="selected-time" id="selected-time"></div>
+
+
+            <div class="booking-actions">
+                <button
+                    type="button"
+                    class="booking-btn secondary"
+                    data-back="2">
+                    Retour
+                </button>
+
+                <button
+                    type="button"
+                    class="booking-btn primary"
+                    id="time-next"
+                    disabled>
+                    Continuer
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- STEP 4 -->
+        <div class="booking-step" id="step-4">
+
+            <div class="booking-header">
+                <span class="booking-eyebrow">RÉSERVATION</span>
+                <h2>Vos informations</h2>
+                <p>Entrez vos coordonnées et les informations du véhicule.</p>
+            </div>
+
+
+            <form id="customer-form" novalidate>
+
+                <div class="form-group">
+                    <label for="customer-name">
+                        Nom complet *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customer-name"
+                        placeholder="Jean Tremblay"
+                        required>
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="customer-phone">
+                            Téléphone *
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="customer-phone"
+                            placeholder="514-555-1234"
+                            required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="customer-email">
+                            Courriel *
+                        </label>
+
+                        <input
+                            type="email"
+                            id="customer-email"
+                            placeholder="jean@email.com"
+                            required>
+                    </div>
+
+                </div>
+
+
+                <div class="vehicle-section">
+
+                    <h3>Votre véhicule</h3>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label for="vehicle-make">
+                                Marque *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="vehicle-make"
+                                placeholder="Toyota"
+                                required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="vehicle-model">
+                                Modèle *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="vehicle-model"
+                                placeholder="Corolla"
+                                required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="vehicle-year">
+                                Année *
+                            </label>
+
+                            <input
+                                type="number"
+                                id="vehicle-year"
+                                placeholder="2022"
+                                min="1900"
+                                max="2100"
+                                required>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="extra-info">
+                        Informations supplémentaires
+                        <span>(optionnel)</span>
+                    </label>
+
+                    <textarea
+                        id="extra-info"
+                        rows="4"
+                        placeholder="Avez-vous des informations particulières à nous transmettre ?"></textarea>
+                </div>
+
+
+                <div class="booking-actions">
+
+                    <button
+                        type="button"
+                        class="booking-btn secondary"
+                        data-back="3">
+                        Retour
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="booking-btn primary">
+                        Vérifier la réservation
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- STEP 5 -->
+        <div class="booking-step" id="step-5">
+
+            <div class="booking-header">
+                <span class="booking-eyebrow">RÉSERVATION</span>
+                <h2>Confirmez votre réservation</h2>
+                <p>Vérifiez vos informations avant de confirmer.</p>
+            </div>
+
+
+            <div class="booking-summary" id="booking-summary"></div>
+
+
+            <div class="hold-notice" id="hold-notice">
+                <span class="hold-icon">⏱</span>
+
+                <div>
+                    <strong>Votre heure est temporairement réservée</strong>
+                    <p>
+                        Temps restant :
+                        <strong id="hold-countdown">10:00</strong>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="booking-actions">
+
+                <button
+                    type="button"
+                    class="booking-btn secondary"
+                    data-back="4">
+                    Modifier
+                </button>
+
+                <button
+                    type="button"
+                    class="booking-btn primary"
+                    id="confirm-booking">
+                    Confirmer la réservation
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUCCESS -->
+        <div class="booking-step" id="step-success">
+
+            <div class="booking-success">
+
+                <div class="success-icon">
+                    ✓
+                </div>
+
+                <span class="booking-eyebrow">RÉSERVATION CONFIRMÉE</span>
+
+                <h2>Merci pour votre réservation !</h2>
+
+                <p>
+                    Votre réservation a été confirmée.
+                </p>
+
+                <div id="confirmation-details"></div>
+
+                <button
+                    type="button"
+                    class="booking-btn primary"
+                    id="new-booking">
+                    Nouvelle réservation
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+>>>>>>> calendrier-dynamic
 </section>
 
 <!-- FOOTER -->
@@ -846,6 +2315,11 @@ if(matchMedia('(pointer:fine)').matches){
   document.addEventListener('mouseenter',()=>{cur.style.opacity=1;dot.style.opacity=1;});
 }
 </script>
+<<<<<<< HEAD
 <script src="reservation.js"></script>
+=======
+<script src="booking.js"></script>
+<script src="forfaits-showcase.js"></script>
+>>>>>>> calendrier-dynamic
 </body>
 </html>

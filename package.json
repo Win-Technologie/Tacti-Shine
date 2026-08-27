@@ -1,9 +1,17 @@
 {
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "@vercel/postgres": "^0.10.0",
+>>>>>>> calendrier-dynamic
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "nodemailer": "^9.0.3",
+<<<<<<< HEAD
+=======
+    "pg": "^8.23.0",
+>>>>>>> calendrier-dynamic
     "vercel": "^58.4.0"
   },
   "name": "tacti-shine",

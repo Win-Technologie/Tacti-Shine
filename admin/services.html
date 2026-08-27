@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services · Admin · Tacti Shine QC</title>
+    <link rel="icon" type="image/jpg" href="../tacti-shine.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#070807; color:#e0e4dc; font-family:'Plus Jakarta Sans',sans-serif; padding:2rem; }
+        .container { max-width:1100px; margin:0 auto; }
+        .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1e221b; padding-bottom:1rem; margin-bottom:2rem; }
+        .header h1 { font-family:'Oswald'; font-weight:700; text-transform:uppercase; font-size:2rem; letter-spacing:.05em; }
+        .header h1 span { color:#7cb342; }
+        .header a { color:#7cb342; text-decoration:none; border:1px solid #2e3429; padding:0.3rem 1rem; border-radius:4px; font-size:0.8rem; transition:.2s; }
+        .header a:hover { background:#7cb342; color:#08130a; border-color:#7cb342; }
+        .back-link { color:#9aa094; text-decoration:none; font-size:0.85rem; display:inline-block; margin-bottom:1rem; }
+        .back-link:hover { color:#7cb342; }
+        .card { background:#121410; border:1px solid #22261d; border-radius:12px; padding:1.2rem 1.5rem 1.8rem; margin-bottom:1.5rem; }
+        .card h3 { font-family:'Oswald'; font-weight:600; text-transform:uppercase; font-size:1.1rem; margin-bottom:1rem; }
+
+        .service-item { background:#0c0f0b; padding:1rem 1.2rem; border-radius:6px; margin-bottom:0.8rem; border-left:3px solid #2a3026; }
+        .service-item.inactive { opacity:0.5; border-left-color:#1a1d18; }
+        .service-item .top-row { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; }
+        .service-item .name { font-family:'Oswald'; font-weight:600; font-size:1.05rem; text-transform:uppercase; letter-spacing:.02em; }
+        .service-item .id-tag { color:#7a8073; font-size:0.7rem; margin-left:0.5rem; text-transform:none; letter-spacing:normal; font-family:'Plus Jakarta Sans'; }
+        .service-item .desc { color:#9aa094; font-size:0.85rem; margin-top:0.2rem; }
+        .service-item .meta-row { display:flex; gap:1.2rem; margin-top:0.5rem; font-size:0.8rem; color:#c9cec2; }
+        .status-badge { display:inline-block; padding:0.1rem 0.6rem; border-radius:20px; font-size:0.65rem; font-weight:600; text-transform:uppercase; }
+        .status-active { background:#1d3a1d; color:#7cb342; }
+        .status-inactive { background:#26221a; color:#a0916a; }
+
+        .btn { background:#7cb342; color:#08130a; border:none; padding:0.4rem 1.2rem; border-radius:4px; font-family:'Oswald'; font-weight:600; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; font-size:0.75rem; transition:.2s; }
+        .btn:hover { background:#9ccc65; }
+        .btn.danger { background:#b33; color:#fff; }
+        .btn.danger:hover { background:#d44; }
+        .btn.outline { background:transparent; border:1px solid #3d4239; color:#d4d9d0; }
+        .btn.outline:hover { border-color:#7cb342; color:#7cb342; }
+        .btn.add { background:transparent; border:1px solid #3d4239; color:#d4d9d0; margin-top:0.5rem; }
+        .btn.add:hover { border-color:#7cb342; color:#7cb342; }
+        .actions { display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap; }
+
+        dialog { background:#121410; color:#e0e4dc; border:1px solid #22261d; border-radius:12px; padding:1.6rem; width:480px; max-width:90vw; font-family:'Plus Jakarta Sans'; }
+        dialog::backdrop { background:rgba(0,0,0,0.7); }
+        dialog h2 { font-family:'Oswald'; font-weight:600; text-transform:uppercase; font-size:1.1rem; margin-bottom:0.5rem; }
+        label { display:block; font-size:0.7rem; text-transform:uppercase; color:#7a8073; margin:0.9rem 0 0.3rem; letter-spacing:.03em; }
+        input, textarea, select { width:100%; padding:0.5rem 0.6rem; background:#0a0c09; border:1px solid #262a21; border-radius:4px; color:#e0e4dc; font-family:'Plus Jakarta Sans'; font-size:0.85rem; box-sizing:border-box; }
+        input:focus, textarea:focus { outline:none; border-color:#7cb342; }
+        textarea { resize:vertical; min-height:50px; }
+        .checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.9rem; }
+        .checkbox-row input { width:auto; }
+        .checkbox-row label { margin:0; text-transform:none; font-size:0.85rem; color:#e0e4dc; }
+
+        .price-table-wrap { margin-top:0.5rem; overflow-x:auto; display:none; }
+        .price-table-wrap.visible { display:block; }
+        .price-table-wrap > label { margin-top:0; }
+        table.price-table { border-collapse:separate; border-spacing:0; width:100%; min-width:380px; background:#0a0c09; border:1px solid #22261d; border-radius:8px; overflow:hidden; }
+        table.price-table th, table.price-table td { padding:0.5rem 0.6rem; text-align:center; border-bottom:1px solid #1a1d18; border-right:1px solid #1a1d18; }
+        table.price-table th:last-child, table.price-table td:last-child { border-right:none; }
+        table.price-table tr:last-child td { border-bottom:none; }
+        table.price-table thead th { font-family:'Oswald'; font-weight:600; text-transform:uppercase; font-size:0.65rem; letter-spacing:.04em; color:#9aa094; background:#0d100c; }
+        table.price-table th.row-head { text-align:left; font-family:'Oswald'; font-weight:600; text-transform:uppercase; font-size:0.7rem; letter-spacing:.03em; color:#c9cec2; background:#0d100c; white-space:nowrap; }
+        table.price-table td { position:relative; }
+        table.price-table td .currency { position:absolute; left:0.6rem; top:50%; transform:translateY(-50%); color:#5f6459; font-size:0.75rem; pointer-events:none; }
+        table.price-table input[type="number"] { width:100%; min-width:0; text-align:right; padding:0.35rem 0.5rem 0.35rem 1.1rem; background:#121510; border:1px solid #262a21; }
+        table.price-table input[type="number"]:focus { border-color:#7cb342; background:#0c0f0b; }
+
+        .flat-price-box { display:none; align-items:center; gap:0.6rem; margin-top:0.5rem; background:#0a0c09; border:1px solid #22261d; border-radius:8px; padding:0.6rem 0.8rem; max-width:220px; }
+        .flat-price-box.visible { display:flex; }
+        .flat-price-box label { margin:0; }
+        .flat-price-box .currency { color:#5f6459; font-size:0.85rem; }
+        .flat-price-box input { flex:1; min-width:0; text-align:right; }
+
+        .dialog-actions { margin-top:1.4rem; display:flex; justify-content:flex-end; gap:0.5rem; }
+        #form-error { color:#e07a5f; font-size:0.8rem; margin-top:0.8rem; display:none; }
+
+        .toast { position:fixed; bottom:2rem; right:2rem; background:#121410; border:1px solid #7cb342; padding:0.8rem 1.6rem; border-radius:8px; color:#e0e4dc; font-family:'Chakra Petch'; font-size:0.9rem; box-shadow:0 8px 30px rgba(0,0,0,0.6); transform:translateY(120%); transition:transform .3s ease; z-index:999; }
+        .toast.show { transform:translateY(0); }
+        .toast.error { border-color:#b33; }
+        .toast strong { color:#7cb342; }
+        .toast.error strong { color:#e07a5f; }
+
+        @media(max-width:600px){ body { padding:1rem; } .service-item .top-row { flex-direction:column; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><span>Services</span></h1>
+        <a href="../index.html">← Site</a>
+    </div>
+    <a href="index.html" class="back-link">← Retour au tableau de bord</a>
+
+    <div class="card">
+        <h3>Gérer les services</h3>
+        <div id="services-list"></div>
+        <button class="btn add" id="new-service-btn">+ Nouveau service</button>
+    </div>
+</div>
+
+<div id="toast" class="toast">✅ <strong>Enregistré</strong></div>
+
+
+<dialog id="service-dialog">
+    <form id="service-form">
+
+        <h2 id="dialog-title">Nouveau service</h2>
+
+        <label for="field-id">Identifiant (unique, ex: hivernale)</label>
+        <input type="text" id="field-id" required>
+
+        <label for="field-name">Nom</label>
+        <input type="text" id="field-name" required>
+
+        <label for="field-description">Description</label>
+        <textarea id="field-description" rows="2"></textarea>
+
+        <label for="field-duration">Durée de base (heures, ex: 1.5)</label>
+        <input type="number" id="field-duration" step="0.5" min="0.5" required>
+
+        <label for="field-features">Caractéristiques (une par ligne, affichées en puces sur le site)</label>
+        <textarea id="field-features" rows="4" placeholder="Décontamination chimique&#10;Retrait du calcium&#10;Remise à niveau complète"></textarea>
+
+        <label for="field-display-section">Où l'afficher sur le site public</label>
+        <select id="field-display-section">
+            <option value="">Nulle part (visible seulement dans la réservation)</option>
+            <option value="forfaits">Section "Forfaits détaillage"</option>
+            <option value="ceramique">Section "Revêtements céramiques"</option>
+        </select>
+
+        <label for="field-type">Type (regroupe les forfaits similaires — utile surtout pour la section céramique)</label>
+        <input type="text" id="field-type" placeholder="ex: entretien">
+
+        <div class="checkbox-row">
+            <input type="checkbox" id="field-is-flat">
+            <label for="field-is-flat">Prix fixe (pas de variation par véhicule/type)</label>
+        </div>
+
+        <div class="flat-price-box" id="flat-price-field">
+            <label for="field-flat-price">Prix fixe</label>
+            <span class="currency">$</span>
+            <input type="number" id="field-flat-price" step="0.01" min="0">
+        </div>
+
+        <div class="price-table-wrap" id="pricing-grid">
+            <label>Grille tarifaire</label>
+            <table class="price-table">
+                <thead>
+                    <tr><th></th><th>Intérieur</th><th>Extérieur</th><th>Complet</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="row-head">Petit véhicule</th>
+                        <td><span class="currency">$</span><input type="number" id="price-small-interior" step="0.01" min="0"></td>
+                        <td><span class="currency">$</span><input type="number" id="price-small-exterior" step="0.01" min="0"></td>
+                        <td><span class="currency">$</span><input type="number" id="price-small-complete" step="0.01" min="0"></td>
+                    </tr>
+                    <tr>
+                        <th class="row-head">Grand véhicule</th>
+                        <td><span class="currency">$</span><input type="number" id="price-big-interior" step="0.01" min="0"></td>
+                        <td><span class="currency">$</span><input type="number" id="price-big-exterior" step="0.01" min="0"></td>
+                        <td><span class="currency">$</span><input type="number" id="price-big-complete" step="0.01" min="0"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="form-error"></div>
+
+        <div class="dialog-actions">
+            <button type="button" id="cancel-btn" class="btn outline">Annuler</button>
+            <button type="submit" class="btn">Enregistrer</button>
+        </div>
+
+    </form>
+</dialog>
+
+
+<script>
+
+    let services = [];
+    let editingId = null; // null = création
+
+
+    function showToast(msg, isError) {
+        const t = document.getElementById('toast');
+        t.innerHTML = msg;
+        t.classList.toggle('error', !!isError);
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+    }
+
+
+    /* =========================================
+       CHARGEMENT
+    ========================================= */
+
+    async function loadServices() {
+
+        const response = await fetch('/api/admin/services');
+
+        if (response.status === 401) {
+            window.location.href = '/admin/login.html';
+            return;
+        }
+
+        const data = await response.json();
+        services = data.services;
+
+        render();
+    }
+
+
+    function render() {
+
+        const container = document.getElementById('services-list');
+
+        container.innerHTML = services.map(service => {
+
+            const priceLabel = service.flatPrice !== null
+                ? `${service.flatPrice.toFixed(2)} $`
+                : (service.pricing.length
+                    ? `${Math.min(...service.pricing.map(p => p.price)).toFixed(2)} $ – ${Math.max(...service.pricing.map(p => p.price)).toFixed(2)} $`
+                    : '—');
+
+            return `
+                <div class="service-item ${service.active ? '' : 'inactive'}">
+                    <div class="top-row">
+                        <div>
+                            <span class="name">${escapeHtml(service.name)}<span class="id-tag">${escapeHtml(service.id)}</span></span>
+                            <div class="desc">${escapeHtml(service.description)}</div>
+                        </div>
+                        <span class="status-badge ${service.active ? 'status-active' : 'status-inactive'}">
+                            ${service.active ? 'Actif' : 'Désactivé'}
+                        </span>
+                    </div>
+                    <div class="meta-row">
+                        <span>${service.duration}h</span>
+                        <span>${priceLabel}</span>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="btn outline" onclick="openEdit('${service.id}')">Modifier</button>
+                        <button type="button" class="btn outline" onclick="toggleActive('${service.id}', ${!service.active})">
+                            ${service.active ? 'Désactiver' : 'Activer'}
+                        </button>
+                        <button type="button" class="btn danger" onclick="deleteService('${service.id}')">Supprimer</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+
+    /* =========================================
+       DIALOGUE (créer / modifier)
+    ========================================= */
+
+    const dialog = document.getElementById('service-dialog');
+    const form = document.getElementById('service-form');
+    const isFlatCheckbox = document.getElementById('field-is-flat');
+    const flatPriceField = document.getElementById('flat-price-field');
+    const pricingGrid = document.getElementById('pricing-grid');
+
+
+    function toggleFlatFields() {
+        const isFlat = isFlatCheckbox.checked;
+        flatPriceField.classList.toggle('visible', isFlat);
+        pricingGrid.classList.toggle('visible', !isFlat);
+    }
+
+    isFlatCheckbox.addEventListener('change', toggleFlatFields);
+
+
+    document.getElementById('new-service-btn').addEventListener('click', () => {
+
+        editingId = null;
+        document.getElementById('dialog-title').textContent = 'Nouveau service';
+
+        form.reset();
+        document.getElementById('field-id').disabled = false;
+        isFlatCheckbox.checked = false;
+        toggleFlatFields();
+        document.getElementById('form-error').style.display = 'none';
+
+        dialog.showModal();
+    });
+
+
+    window.openEdit = function (id) {
+
+        const service = services.find(s => s.id === id);
+        if (!service) return;
+
+        editingId = id;
+        document.getElementById('dialog-title').textContent = 'Modifier — ' + service.name;
+
+        document.getElementById('field-id').value = service.id;
+        document.getElementById('field-id').disabled = true; // l'id ne change pas après création
+        document.getElementById('field-name').value = service.name;
+        document.getElementById('field-description').value = service.description || '';
+        document.getElementById('field-duration').value = service.duration;
+        document.getElementById('field-features').value = (service.features || []).join('\n');
+        document.getElementById('field-display-section').value = service.displaySection || '';
+        document.getElementById('field-type').value = service.type || '';
+
+        const isFlat = service.flatPrice !== null;
+        isFlatCheckbox.checked = isFlat;
+        toggleFlatFields();
+
+        if (isFlat) {
+            document.getElementById('field-flat-price').value = service.flatPrice;
+        } else {
+            service.pricing.forEach(row => {
+                const input = document.getElementById(`price-${row.vehicleSize}-${row.cleaningType}`);
+                if (input) input.value = row.price;
+            });
+        }
+
+        document.getElementById('form-error').style.display = 'none';
+
+        dialog.showModal();
+    };
+
+
+    document.getElementById('cancel-btn').addEventListener('click', () => {
+        dialog.close();
+    });
+
+
+    form.addEventListener('submit', async (e) => {
+
+        e.preventDefault();
+
+        const isFlat = isFlatCheckbox.checked;
+
+        const payload = {
+            id: document.getElementById('field-id').value.trim(),
+            name: document.getElementById('field-name').value.trim(),
+            description: document.getElementById('field-description').value.trim(),
+            duration: parseFloat(document.getElementById('field-duration').value),
+            features: document.getElementById('field-features').value
+                .split('\n')
+                .map(line => line.trim())
+                .filter(Boolean),
+            displaySection: document.getElementById('field-display-section').value || null,
+            type: document.getElementById('field-type').value.trim() || null,
+            flatPrice: isFlat
+                ? parseFloat(document.getElementById('field-flat-price').value)
+                : null,
+            pricing: isFlat ? [] : [
+                { vehicleSize: 'small', cleaningType: 'interior', price: parseFloat(document.getElementById('price-small-interior').value) },
+                { vehicleSize: 'small', cleaningType: 'exterior', price: parseFloat(document.getElementById('price-small-exterior').value) },
+                { vehicleSize: 'small', cleaningType: 'complete', price: parseFloat(document.getElementById('price-small-complete').value) },
+                { vehicleSize: 'big', cleaningType: 'interior', price: parseFloat(document.getElementById('price-big-interior').value) },
+                { vehicleSize: 'big', cleaningType: 'exterior', price: parseFloat(document.getElementById('price-big-exterior').value) },
+                { vehicleSize: 'big', cleaningType: 'complete', price: parseFloat(document.getElementById('price-big-complete').value) }
+            ]
+        };
+
+        const response = await fetch('/api/admin/services', {
+            method: editingId ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            const errorEl = document.getElementById('form-error');
+            errorEl.textContent = data.error || 'Une erreur est survenue.';
+            errorEl.style.display = 'block';
+            return;
+        }
+
+        dialog.close();
+        showToast('✅ <strong>Service enregistré</strong>');
+        loadServices();
+    });
+
+
+    /* =========================================
+       ACTIVER / DÉSACTIVER
+    ========================================= */
+
+    window.toggleActive = async function (id, newActiveState) {
+
+        await fetch('/api/admin/services', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, active: newActiveState })
+        });
+
+        showToast(newActiveState ? '✅ <strong>Service activé</strong>' : '✅ <strong>Service désactivé</strong>');
+        loadServices();
+    };
+
+
+    /* =========================================
+       SUPPRIMER
+    ========================================= */
+
+    window.deleteService = async function (id) {
+
+        if (!confirm('Supprimer ce service définitivement ? Cette action est irréversible.')) {
+            return;
+        }
+
+        await fetch(`/api/admin/services?id=${encodeURIComponent(id)}`, {
+            method: 'DELETE'
+        });
+
+        showToast('🗑️ <strong>Service supprimé</strong>');
+        loadServices();
+    };
+
+
+    loadServices();
+
+</script>
+
+</body>
+</html>

@@ -1,3 +1,9 @@
 .vercel
 .env
+<<<<<<< HEAD
 node_modules/
+=======
+node_modules/
+.vercel
+.env*
+>>>>>>> calendrier-dynamic
