@@ -1246,7 +1246,7 @@ customerForm.addEventListener("submit", async event => {
 
         // Le serveur est la source de vérité pour le prix/la durée
         bookingState.holdId = data.holdId;
-        bookingState.holdExpiresAt = new Date(data.holdExpiresAt).getTime();
+        bookingState.holdExpiresAt = new Date(data.expiresAt).getTime();
         bookingState.startTime = data.startTime;
         bookingState.endTime = data.endTime;
         bookingState.duration = data.duration;
@@ -1832,6 +1832,12 @@ function resetBooking() {
 
     bookingState.holdId = null;
     bookingState.holdExpiresAt = null;
+
+
+    confirmBooking.disabled = false;
+
+    confirmBooking.textContent =
+        "Confirmer la réservation";
 
 
     selectedCalendarDate = null;
